@@ -1,3 +1,5 @@
 {
-	"isWindowsInstalled": false
+	"isWindowsInstalled": false,
+	"stepOne": false,
+	"stepTwo": false
 }
