@@ -1,12 +1,8 @@
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.group.FlxGroup.FlxTypedGroup;
-import flixel.group.FlxGroup;
-import flixel.input.mouse.FlxMouseEventManager;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
-import haxe.macro.Expr.Function;
 
 class CustomWindow extends FlxSprite
 {
