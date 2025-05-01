@@ -204,7 +204,7 @@ if (FileSystem.exists("assets/data/settings.json"))
 					o.stepOne = false;
 					o.stepTwo = false;
 					File.saveContent("assets/data/settings.json", Json.stringify(o, null,""));
-					FlxG.switchState(MBRstate.new);
+					FlxG.switchState(BIOState.new);
 				   }, 5000);
 				 }
 		    }, 
@@ -267,7 +267,7 @@ if (FileSystem.exists("assets/data/settings.json"))
 		}
 		if (o.isWindowsInstalled == true)
 			{
-				FlxG.switchState(MBRstate.new);	
+				FlxG.switchState(BIOState.new);	
 			}
 	}
 }
