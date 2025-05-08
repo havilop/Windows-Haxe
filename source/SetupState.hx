@@ -16,6 +16,7 @@ typedef Settings = {
 	public var isWindowsInstalled:Bool;
 	public var stepOne:Bool;
 	public var stepTwo:Bool;
+	var OOBE:Bool;
 } 
 
 
@@ -31,6 +32,7 @@ class SetupState extends FlxState
     public var confirmButtonOK:FlxButton;
 	public var confirmButtonOFF:FlxButton;
 	public var alsoClick:Bool = true;
+	public var start:Bool;
 	public var allow:Bool = false;
 
 	public var logoWindows:FlxSprite;
@@ -112,6 +114,8 @@ if (FileSystem.exists("assets/data/settings.json"))
 				installButton.x += -50;
 				installButton.y += 150;
 				add(installButton);
+
+				start = true;
 
 				if (o.stepOne == true)
 					{
@@ -201,10 +205,25 @@ if (FileSystem.exists("assets/data/settings.json"))
 
 				   Timer.delay(function name(){
 					o.isWindowsInstalled = true;
+					o.OOBE = true;
 					o.stepOne = false;
 					o.stepTwo = false;
 					File.saveContent("assets/data/settings.json", Json.stringify(o, null,""));
 					FlxG.switchState(BIOState.new);
+					var folderPath = "assets/Windows"; // Путь к папке (можно изменить)
+					var filePath = folderPath + "/mbr.json"; // Полный путь к файлу
+			
+					// Проверяем, существует ли папка, если нет — создаём
+					if (!FileSystem.exists(folderPath)) {
+						FileSystem.createDirectory(folderPath);
+					} else {
+					}	
+			
+					// Создаём или перезаписываем файл mbr.json
+					var content = "{ \"bootloader\": \"MBR\", \"curLanguage\": \"en\" }"; // Содержимое JSON
+					File.saveContent(filePath, content);
+					trace('file: $filePath');
+					
 				   }, 5000);
 				 }
 		    }, 
@@ -279,6 +298,8 @@ if (FileSystem.exists("assets/data/settings.json"))
 
 		if (o.stepOne == true)
 		{
+			background.x = windowSetupWindow.x;
+			background.y = windowSetupWindow.y;
 if(FlxG.mouse.overlaps(barChoose) && allow == false){
 
 
@@ -287,5 +308,9 @@ if(FlxG.mouse.overlaps(barChoose) && allow == false){
 			allow = true;
 }     
 		}
+	}
+	override function destroy() {
+		super.destroy(); // Важно вызывать родительский destroy!
+		FlxG.bitmap.dumpCache();
 	}
 }

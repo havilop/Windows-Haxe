@@ -18,10 +18,12 @@ import sys.io.Process;
 typedef BiosSettings = {
       public var autoMBR:Bool;
       var isWindowsInstalled:Bool;
+      public var fastBIOS:Bool;
 } 
 
 enum BiosColumn {
 	reset;
+    fast;
 	auto;
 }
 
@@ -35,10 +37,14 @@ class BIOState extends FlxState
    var ram:String;
    var notBios:Bool = true;
    var bios:Bool;
+   var isreset:Bool;
    var biosIs:Bool = false;
    var allow:Bool = false;
    var autoTextVar:FlxText;
    var autoText:FlxText;
+   var delayInt:Int = 2000;
+   var fastText:FlxText;
+   var fastTextVar:FlxText;
    var isTwoSecond:Bool;
   
    var resetText:FlxText;
@@ -55,7 +61,7 @@ override function create()
         if (os == "Windows") { 
              cpu = new Process("wmic", ["cpu", "get", "name"]).stdout.readAll().toString();
              gpu = new Process("wmic", ["path", "win32_VideoController", "get", "name"]).stdout.readAll().toString();
-             ram = new Process("wmic", ["OS", "get", "TotalVisibleMemorySize"]).stdout.readAll().toString();
+            ram = new Process("wmic", ["OS", "get", "TotalVisibleMemorySize"]).stdout.readAll().toString();
         }
         if (FileSystem.exists("assets/data/settings.json")) 
             {
@@ -65,11 +71,20 @@ override function create()
                     o = Json.parse(data);
                     s = Json.parse(data);
                   
+                    if (o.fastBIOS == true)
+                        {
+                            delayInt = 1000;
+                            trace("true");
+                        }
+                        if (o.fastBIOS == false)
+                            {
+                                delayInt = 2000;
+                            }
 
 Timer.delay(function name() {
     trace("2secondAFter");
     isTwoSecond = true;
-}, 4000);
+}, delayInt);
 
 
                 }
@@ -111,7 +126,10 @@ if (o.autoMBR == true && isTwoSecond == true && biosIs == false)
         }, 500);
     }
 
+        
+
 var autoVar = o.autoMBR + "";
+var fastVar = o.fastBIOS + "";
 
 if (bios == true && allow == false)
     {
@@ -126,7 +144,12 @@ if (bios == true && allow == false)
             autoText = new FlxText(0,0,0,"AutoMBR Launch",52);
             add(autoText);
 
-            
+            fastText = new FlxText(0,100,0,"FastBios",52);
+            add(fastText);
+
+            fastTextVar = new FlxText(0,1000,0,fastVar,52);
+            fastTextVar.visible = false;
+            add(fastTextVar);
 
             autoTextVar = new FlxText(0,1000,0,autoVar,52);
             autoTextVar.visible = false;
@@ -146,15 +169,28 @@ if (bios == true) {
     {
         case reset:
             autoDec.visible = false;
+            fastTextVar.visible = false;
             autoTextVar.visible = false;
+            fastText.color = 0xFFFFFF;
             resetText.color = 0xFF0000;
             autoText.color = 0xFFFFFF;
         case auto:
             autoDec.visible = true;
+            fastTextVar.visible = false;
             autoTextVar.visible = true;
             autoTextVar.text = autoVar;
             autoText.color = 0xFF0000;
             resetText.color = 0xFFFFFF;
+        case fast:
+            autoDec.visible = false;
+            isreset = false;
+            autoTextVar.visible = false;
+            fastText.visible = true;
+            fastTextVar.text = fastVar;
+            fastTextVar.visible = true;
+            resetText.color = 0xFFFFFF;
+            autoText.color = 0xFFFFFF;
+            fastText.color = 0xFF0000;
     }
 }
     if (bios == false)
@@ -162,6 +198,8 @@ if (bios == true) {
                 bg.kill();
                 autoText.kill();
                 autoTextVar.kill();
+                fastText.kill();
+                fastTextVar.kill();
                 resetText.kill();
                 autoDec.kill();
                 allow = false;
@@ -190,10 +228,18 @@ if (FlxG.keys.justPressed.ESCAPE && notBios == false)
     if (FlxG.keys.justPressed.DOWN && curColumn == auto)
         {
             trace("Pressed DOWN");
+
             curColumn = reset;
+       }
+       if (FlxG.keys.justReleased.DOWN && curColumn == reset)
+        {
+           
+isreset = false;
+            
        }
        if (FlxG.keys.justPressed.UP && curColumn == reset)
         {
+            isreset = true;
             curColumn = auto;
        }
        if (FlxG.keys.justPressed.RIGHT && curColumn == auto)
@@ -222,7 +268,37 @@ if (FlxG.keys.justPressed.ESCAPE && notBios == false)
         {
            o.isWindowsInstalled = false;
            File.saveContent("assets/data/settings.json", Json.stringify(o, null,""));
-          FlxG.switchState(LoadState.new);
+           LoadState.setLoadingScreen(2000,SetupState.new);
        }
+       if (FlxG.keys.justPressed.DOWN && curColumn == reset && isreset == false)
+        {
+         curColumn = fast;
+         trace("fast");
+       }
+       if (FlxG.keys.justPressed.LEFT && curColumn == fast)
+        {
+         if (o.fastBIOS == true)
+         {
+            o.fastBIOS = false;
+            File.saveContent("assets/data/settings.json", Json.stringify(o, null,""));
+         }
+       }
+       if (FlxG.keys.justPressed.RIGHT && curColumn == fast)
+        {
+         if (o.fastBIOS == false)
+         {
+            o.fastBIOS = true;
+            File.saveContent("assets/data/settings.json", Json.stringify(o, null,""));
+         }
+       }
+       if (FlxG.keys.justPressed.UP && curColumn == fast)
+        {
+            isreset = true;
+         curColumn = reset;
+       }
+    }
+    override function destroy() {
+        super.destroy(); // Важно вызывать родительский destroy!
+        FlxG.bitmap.clearCache();
     }
 }

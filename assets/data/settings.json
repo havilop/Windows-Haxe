@@ -2,5 +2,8 @@
 	"isWindowsInstalled": false,
 	"stepOne": false,
 	"stepTwo": false,
-	"autoMBR": false
+	"autoMBR": false,
+	"fastBIOS": false,
+	"OOBE": false,
+	"allow": false
 }

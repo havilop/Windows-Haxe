@@ -1,15 +1,25 @@
 import flixel.FlxG;
 import flixel.FlxState;
+import flixel.util.typeLimit.NextState;
 import haxe.Timer;
 
 class LoadState extends FlxState
 {
+
+static public function setLoadingScreen(time:Int,state:NextState) {
+    FlxG.switchState(LoadState.new);
+    Timer.delay(function name() {
+        FlxG.switchState(state);
+      }, time);
+}
+
+
     override function create() {
         super.create();
         FlxG.mouse.visible = false;
-        Timer.delay(function name() {
-          FlxG.switchState(SetupState.new);
-        }, 2000);
+
+    
+
 
     }
     override function update(elapsed:Float) {
