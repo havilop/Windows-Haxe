@@ -18,6 +18,7 @@ typedef Classic = {
     var allow:Bool;
     var curLanguage:String;
     var userName:String;
+    var password:String;
 } 
 
 class OOBE extends FlxState
@@ -38,6 +39,8 @@ class OOBE extends FlxState
 
     var userText:FlxText;
     var inputUserText:FlxUIInputText;
+    var inputPassword:FlxUIInputText;
+    var storedPassword:String = "";
     var userButton:FlxButton;
     var storedText:String = "";
 
@@ -121,6 +124,7 @@ if (FileSystem.exists("assets/Windows/mbr.json"))
                         userText.visible = true;
                         userButton.visible = true;
                         inputUserText.visible = true;
+                        inputPassword.visible = true;
                     }
                     if (isRu == true)
                     {
@@ -133,6 +137,7 @@ if (FileSystem.exists("assets/Windows/mbr.json"))
                         userText.visible = true;
                         userButton.visible = true;
                         inputUserText.visible = true;
+                        inputPassword.visible = true;
                     }
                 });
                 NextButtonLanguage.label.setFormat(l.curLanguage == "en" ? "assets/fonts/my.ttf" : "assets/fonts/ots.ttf", 26, 0x35599C, CENTER);
@@ -153,16 +158,23 @@ if (FileSystem.exists("assets/Windows/mbr.json"))
                 inputUserText.visible = false;
                 add(inputUserText);
 
+                inputPassword = new FlxUIInputText(100,50,200,"",16);
+                inputPassword.font = l.curLanguage == "en" ? "assets/fonts/my.ttf" : "assets/fonts/ots.ttf";
+                inputPassword.visible = false;
+                add(inputPassword);
+
                 userButton = new FlxButton(0,0,"Next",function name() {
                     if (storedText != "") {
                     if (!FileSystem.exists("assets/Windows/Users")) {
 						FileSystem.createDirectory("assets/Windows/Users");
 					} 
                     l.userName = storedText;
+                    l.password = storedPassword;
                     o.OOBE = false;
                     File.saveContent("assets/Windows/mbr.json", Json.stringify(l, null,""));
                     File.saveContent("assets/data/settings.json", Json.stringify(o, null,""));
                     FileSystem.createDirectory('assets/Windows/Users/$storedText');
+                    FileSystem.createDirectory('assets/Windows/Users/$storedText/Desktop');
                     FlxG.switchState(BIOState.new);
                 }
 
@@ -213,6 +225,9 @@ if (FileSystem.exists("assets/Windows/mbr.json"))
 
         inputUserText.x = mainWindows.x + 125;
         inputUserText.y = mainWindows.y + 150;
+        
+        inputPassword.x = mainWindows.x + 125;
+        inputPassword.y = mainWindows.y + 185;
 
         userButton.x = mainWindows.x + 1000;
         userButton.y = mainWindows.y + 650;
@@ -220,6 +235,7 @@ if (FileSystem.exists("assets/Windows/mbr.json"))
         userButton.text = l.curLanguage == "en" ? "Next" : "Далее";
 
         storedText = inputUserText.text;
+        storedPassword = inputPassword.text;
     }
     override function destroy() {
         super.destroy(); // Важно вызывать родительский destroy!

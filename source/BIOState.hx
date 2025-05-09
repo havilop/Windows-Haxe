@@ -62,6 +62,7 @@ override function create()
              cpu = new Process("wmic", ["cpu", "get", "name"]).stdout.readAll().toString();
              gpu = new Process("wmic", ["path", "win32_VideoController", "get", "name"]).stdout.readAll().toString();
             ram = new Process("wmic", ["OS", "get", "TotalVisibleMemorySize"]).stdout.readAll().toString();
+
         }
         if (FileSystem.exists("assets/data/settings.json")) 
             {

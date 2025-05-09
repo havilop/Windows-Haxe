@@ -220,7 +220,7 @@ if (FileSystem.exists("assets/data/settings.json"))
 					}	
 			
 					// Создаём или перезаписываем файл mbr.json
-					var content = "{ \"bootloader\": \"MBR\", \"curLanguage\": \"en\" }"; // Содержимое JSON
+					var content = "{ \"bootloader\": \"MBR\", \"curLanguage\": \"en\", \"wallpaper\": \"assets/images/wallpaper.png\" }"; // Содержимое JSON
 					File.saveContent(filePath, content);
 					trace('file: $filePath');
 					
