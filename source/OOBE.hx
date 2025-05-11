@@ -19,6 +19,7 @@ typedef Classic = {
     var curLanguage:String;
     var userName:String;
     var password:String;
+    var taskbar:String;
 } 
 
 class OOBE extends FlxState
@@ -170,6 +171,7 @@ if (FileSystem.exists("assets/Windows/mbr.json"))
 					} 
                     l.userName = storedText;
                     l.password = storedPassword;
+                    l.taskbar = "down";
                     o.OOBE = false;
                     File.saveContent("assets/Windows/mbr.json", Json.stringify(l, null,""));
                     File.saveContent("assets/data/settings.json", Json.stringify(o, null,""));

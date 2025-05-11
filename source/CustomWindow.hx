@@ -19,7 +19,7 @@ class CustomWindow extends FlxSprite
 
 
 
-    public function new(X:Int,Y:Int,title:String,icon:String, ?OnAppear:Void->Void, DefaultExit:Null<() -> Void>, CanTouch:Bool)
+    public function new(X:Int,Y:Int,title:String,?icon:String, ?OnAppear:Void->Void, DefaultExit:Null<() -> Void>, CanTouch:Bool)
     {
         
 

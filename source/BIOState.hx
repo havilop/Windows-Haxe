@@ -124,7 +124,7 @@ if (o.autoMBR == true && isTwoSecond == true && biosIs == false)
     {
         Timer.delay(function name() {
             FlxG.switchState(MBRstate.new);
-        }, 500);
+        }, 1);
     }
 
         

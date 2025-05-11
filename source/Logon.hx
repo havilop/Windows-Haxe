@@ -17,12 +17,14 @@ typedef MbrSettings = {
 class Logon extends FlxGroup
 {
     private var bg:FlxSprite;
+    static public var logon:Bool;
     private var user:FlxSprite;
     private var inputPassword:FlxUIInputText;
     private var userNameText:FlxText;
     private var o:MbrSettings;
     private var is:Bool;
     private var Next:FlxButton;
+    private var timeText:FlxText;
 
     public function new() {
         super();
@@ -32,11 +34,13 @@ class Logon extends FlxGroup
             {
                 if (o.password == inputPassword.text)
                 {
+                    logon = false;
              this.kill();
                 }
             }
             if (is == false) 
             {
+                logon = false;
                 this.kill();
             }
         }
@@ -58,6 +62,12 @@ class Logon extends FlxGroup
         user.y -= 100;
         add(user);
 
+        timeText = new FlxText(10, 10, 0, "", 32);
+        timeText.font = "assets/fonts/my.ttf";
+        timeText.color = FlxColor.WHITE;
+        timeText.alignment = LEFT;
+        add(timeText);
+
         userNameText = new FlxText(0,0,0,"",45);
                 userNameText.color = 0xFFFFFF;
                 userNameText.font =  "assets/fonts/my.ttf";
@@ -67,8 +77,8 @@ class Logon extends FlxGroup
                 add(userNameText);
 
                 Next = new FlxButton(0,0,"Next",click);
-                Next.label.setFormat(o.curLanguage == "en" ? "assets/fonts/my.ttf" : "assets/fonts/ots.ttf", 26, 0x000000, CENTER);
-                Next.makeGraphic(150,50,FlxColor.WHITE);
+                Next.label.setFormat(o.curLanguage == "en" ? "assets/fonts/my.ttf" : "assets/fonts/ots.ttf", 22, 0x000000, CENTER);
+                Next.makeGraphic(100,28,FlxColor.WHITE);
 				Next.updateHitbox();
                 Next.visible = true;
                 Next.text = o.curLanguage == "en" ? "Next" : "Далее";
@@ -92,9 +102,34 @@ class Logon extends FlxGroup
             is = false;
         }
         
-
+updateTime();
     }
     override function update(elapsed:Float) {
         super.update(elapsed);
+        updateTime();
+    }
+     private function updateTime():Void
+    {
+        var now = Date.now();
+        var hours = now.getHours();
+        var minutes = now.getMinutes();
+        var day = now.getDate();
+        var month = now.getMonth() + 1;
+        var year = now.getFullYear();
+        
+    
+        var timeStr = StringTools.lpad(Std.string(hours), "0", 2) + ":" + 
+                      StringTools.lpad(Std.string(minutes), "0", 2);
+        
+      
+        var dateStr = StringTools.lpad(Std.string(day), "0", 2) + "." + 
+                      StringTools.lpad(Std.string(month), "0", 2) + "." + 
+                      Std.string(year);
+        
+      
+        timeText.text = timeStr + "\n" + dateStr;
+        
+       
+        timeText.width = timeText.textField.textWidth + 10;
     }
 }
