@@ -3,12 +3,12 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.ui.FlxButton;
+import flixel.util.FlxColor;
 import haxe.Json;
 import haxe.Timer;
 import sys.FileSystem;
 import sys.io.File;
-//Well this is the main state of this project//
-//u can here find a lot of things//
+
 typedef WindowsMain = {
     var wallpaper:String;
     var taskbar:String;
@@ -17,15 +17,27 @@ typedef WindowsMain = {
 class Windows extends FlxState
 {
     var screenLogon:Logon;
+    var ISAPPEAR:Bool;
+       var is = false;
    static public var bg:FlxSprite;
     var o:WindowsMain;
     var menu:FlxSprite;
+    var settings:SettingsApplication;
     var taskbarmenu:FlxButton;
-    var taskBar:TaskBar;
+    static public var taskBar:TaskBar;
+    static public var IsReset:Bool;
 
+    public function ResetTaskBar() 
+    {
+        taskBar.kill();
+        taskBar = new TaskBar();
+        taskBar.visible = true;
+        add(taskBar);
+    }
     override function create() {
         super.create();
-
+        FlxG.sound.volumeDownKeys = null;
+        FlxG.sound.volumeUpKeys = null;
         FlxG.mouse.visible = true;
         FlxG.mouse.useSystemCursor = true;
         FlxG.autoPause = false;
@@ -40,6 +52,7 @@ class Windows extends FlxState
         }
 
         bg = new FlxSprite(0,0,o.wallpaper);
+        bg.loadGraphic(o.wallpaper);
         bg.screenCenter(X);
         add(bg);
 
@@ -51,16 +64,8 @@ class Windows extends FlxState
         taskBar = new TaskBar();
         taskBar.visible = false;
         add(taskBar);
-        
-        taskbarmenu = new FlxButton(0,0,"",function name() {
-            trace("is");
-        });
-        taskbarmenu.loadGraphic("assets/images/taskbarmeu.png");
-        taskbarmenu.updateHitbox();
-        taskbarmenu.text = o.curLanguage == "en" ? "Taskbar options" : "Параметры панель задач";
-        taskbarmenu.label.setFormat(o.curLanguage == "en" ? "assets/fonts/my.ttf" : "assets/fonts/ots.ttf", 16,null,CENTER);
-        taskbarmenu.visible = false;
-        add(taskbarmenu);
+
+  
 
         screenLogon = new Logon();
         add(screenLogon);
@@ -69,22 +74,48 @@ class Windows extends FlxState
     override function update(elapsed:Float) {
         super.update(elapsed);
 
+            if(IsReset == true)
+        {
+        taskBar = new TaskBar();
+        taskBar.visible = true;
+        add(taskBar);
+        IsReset = false;
+        }
         if (Logon.logon == false)
         {
             if (FlxG.mouse.justPressedRight)
             {
                 if (FlxG.mouse.overlaps(taskBar.mainpart))
                 {
+                    if (is == false)
+                    {
+             taskbarmenu = new FlxButton(0,0,"",function name() {
+            settings = new SettingsApplication();
+            settings.currentSection = "personalization";
+            add(settings);
+        });
+        taskbarmenu.loadGraphic("assets/images/taskbarmeu.png");
+        taskbarmenu.updateHitbox();
+        taskbarmenu.text = o.curLanguage == "en" ? "Taskbar options" : "Параметры панель задач";
+        taskbarmenu.label.setFormat(o.curLanguage == "en" ? "assets/fonts/my.ttf" : "assets/fonts/ots.ttf", 16,FlxColor.WHITE,CENTER);
+        add(taskbarmenu);
                     taskbarmenu.x = FlxG.mouse.x;
                     taskbarmenu.y = FlxG.mouse.y;
-                    taskbarmenu.visible = true;
+                    ISAPPEAR = true;
+is = true;
+    }
                 }
             }
-            if (FlxG.mouse.justPressed)
+            if (FlxG.mouse.justReleased)
             {
                 Timer.delay(function name() {
-                     taskbarmenu.visible = false;
-                }, 100);
+                    if (ISAPPEAR == true)
+                    {
+                         taskbarmenu.kill(); 
+                         ISAPPEAR = false;
+                         is = false;
+                    }
+                }, 1);
             }
             taskBar.visible = true;
         }

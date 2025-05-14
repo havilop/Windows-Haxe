@@ -53,6 +53,9 @@ class BIOState extends FlxState
 override function create() 
     {
         super.create();
+        FlxG.sound.volumeDownKeys = null;
+        FlxG.sound.muteKeys = null;
+        FlxG.sound.volumeUpKeys = null;
         Lib.application.window.title = "Windows 10"; 
         FlxG.mouse.visible = false;
         FlxG.autoPause = false;

@@ -51,6 +51,8 @@ class OOBE extends FlxState
 
     override function create() {
         super.create();
+          FlxG.sound.volumeDownKeys = null;
+        FlxG.sound.volumeUpKeys = null;
         FlxG.mouse.visible = true;
         FlxG.mouse.useSystemCursor = true;
 if (FileSystem.exists("assets/data/settings.json")) 
