@@ -141,9 +141,7 @@ class TaskBar extends FlxGroup
         add(menuextraOFF);
 
         menuextraSETTINGS = new FlxButton(0,0,"",function Open() {
-            settingsWindow = new SettingsApplication();
-            settingsWindow.currentSection = "system";
-            add(settingsWindow);
+           Windows.IsSystem = true;
             swithcFirstTimed = true;
             appear();
         });

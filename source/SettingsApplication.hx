@@ -35,6 +35,12 @@ class SettingsApplication extends FlxGroup
     var textTaskBarChange:FlxText;
     var up:FlxButton;
     var down:FlxButton;
+    var textLanguage:FlxText;
+    var textLanguageCurrent:FlxText;
+    var textLanguageChoose:FlxText;
+    var textLanguageChooseRU:FlxButton;
+    var textLanguageChooseEN:FlxButton;
+    var messageBox:MessageBox;
     
     
     public function AddUI() 
@@ -170,11 +176,105 @@ var cur = l.wallpaper;
         down.updateHitbox();
         down.visible = false;
         add(down);
+
+        textLanguage = new FlxText(0,0,0,"",38);
+        textLanguage.color = 0x35599C;
+        textLanguage.font = l.curLanguage == "en" ? "assets/fonts/my.ttf" : "assets/fonts/ots.ttf";
+        textLanguage.text = l.curLanguage == "en" ? "Language" : "Язык";
+        textLanguage.visible = false;
+        add(textLanguage);
+
+        var curl = l.curLanguage;
+
+        textLanguageCurrent = new FlxText(0,0,0,"",23);
+        textLanguageCurrent.color = 0x000000;
+        textLanguageCurrent.font = l.curLanguage == "en" ? "assets/fonts/my.ttf" : "assets/fonts/ots.ttf";
+        textLanguageCurrent.text = l.curLanguage == "en" ? 'Current: $curl' : 'Текущий: $curl';
+        textLanguageCurrent.visible = false;
+        add(textLanguageCurrent);
+
+        textLanguageChoose = new FlxText(0,0,0,"",28);
+        textLanguageChoose.color = 0x000000;
+        textLanguageChoose.font = l.curLanguage == "en" ? "assets/fonts/my.ttf" : "assets/fonts/ots.ttf";
+        textLanguageChoose.text = l.curLanguage == "en" ? 'Choose language' : 'Выбор языка';
+        textLanguageChoose.visible = false;
+        add(textLanguageChoose);
+
+        textLanguageChooseEN = new FlxButton(0,0,"",function name() {
+            AddBoxEN();
+        });
+        textLanguageChooseEN.label.setFormat(l.curLanguage == "en" ? "assets/fonts/my.ttf" : "assets/fonts/ots.ttf",16,0xFFFFFF,CENTER);
+        textLanguageChooseEN.text = l.curLanguage == "en" ? "English" : "Английский";
+        textLanguageChooseEN.makeGraphic(l.curLanguage == "en" ? 90 : 95, l.curLanguage == "en" ? 25 :25,FlxColor.GRAY);
+        textLanguageChooseEN.updateHitbox();
+        textLanguageChooseEN.visible = false;
+        add(textLanguageChooseEN);
+
+        textLanguageChooseRU = new FlxButton(0,0,"",function name() {
+            AddBoxRU();
+        });
+        textLanguageChooseRU.label.setFormat(l.curLanguage == "en" ? "assets/fonts/my.ttf" : "assets/fonts/ots.ttf",16,0xFFFFFF,CENTER);
+        textLanguageChooseRU.text = l.curLanguage == "en" ? "Russian" : "Русский";
+        textLanguageChooseRU.setGraphicSize(80,23);
+        textLanguageChooseRU.makeGraphic(80,23,FlxColor.GRAY);
+        textLanguageChooseRU.updateHitbox();
+        textLanguageChooseRU.visible = false;
+        add(textLanguageChooseRU);
         
+    }
+    public function AddBoxRU() 
+    {
+        messageBox = new MessageBox(l.curLanguage == "en" ? "You need restart your System\nThat language will work right\n\nRestart now?" : "Вы должны перезапустить систему\nчтобы язык работал правильно\n\nПерезагрузить сейчас?",
+        function name() 
+        {
+            l.curLanguage = "ru";
+            File.saveContent("assets/Windows/mbr.json", Json.stringify(l, null,""));
+            LoadState.setLoadingScreen(1000,BIOState.new); 
+        }, function name() 
+        {
+            messageBox.kill();
+        });
+        add(messageBox);
+    }
+     public function AddBoxEN() 
+    {
+        messageBox = new MessageBox(l.curLanguage == "en" ? "You need restart your System\nThat language will work right\n\nRestart now?" : "Вы должны перезапустить систему\nчтобы язык работал правильно\n\nПерезагрузить сейчас?",
+        function name() 
+        {
+            l.curLanguage = "en";
+            File.saveContent("assets/Windows/mbr.json", Json.stringify(l, null,""));
+            LoadState.setLoadingScreen(1000,BIOState.new); 
+        },function name() 
+        {
+            messageBox.kill();
+        });
+        add(messageBox);
     }
     public function RemoveUI()
     {
         this.kill();
+    }
+    public function UpdateUI() 
+    {
+     systemSection.revive();
+     personalizationSection.update(0.1);
+     textPesonalizationWallpaper.update(0.1);
+     wallpaperCURRENT.update(0.1);
+     textWallpaperCurent.update(0.1);
+     wal1.update(0.1);
+     wal2.update(0.1);
+     wal3.update(0.1);
+     wal4.update(0.1);
+     back.update(0.1);
+     textTaskBar.update(0.1);
+     textTaskBarChange.update(0.1);
+     up.update(0.1);
+     down.update(0.1);
+     textLanguage.update(0.1);
+     textLanguageCurrent.update(0.1);
+    textLanguageChoose.update(0.1);
+    textLanguageChooseRU.update(0.1);
+    textLanguageChooseEN.update(0.1);  
     }
     public function new() 
     {
@@ -200,6 +300,7 @@ var cur = l.wallpaper;
     }
     override function update(elapsed:Float) {
         super.update(elapsed);
+        
         switch(currentSection)
         {
             case "system":
@@ -216,6 +317,11 @@ var cur = l.wallpaper;
                 textTaskBarChange.visible = false;
                 down.visible = false;
                 up.visible = false;
+                textLanguage.visible = true;
+                textLanguageCurrent.visible = true;
+                textLanguageChoose.visible = true;
+                textLanguageChooseEN.visible = true;
+                textLanguageChooseRU.visible = true;
             case "personalization":
                 systemSection.loadGraphic("assets/images/settings/system.png");
 
@@ -243,6 +349,12 @@ var cur = l.wallpaper;
 
                 down.visible = true;
                 up.visible = true;
+
+                textLanguage.visible = false;
+                textLanguageCurrent.visible = false;
+                textLanguageChoose.visible = false;
+                textLanguageChooseEN.visible = false;
+                textLanguageChooseRU.visible = false;
         }
         bg.x = window.x;
         bg.y = window.y;
@@ -255,6 +367,21 @@ var cur = l.wallpaper;
 
         personalizationSection.x = window.x + 14;
         personalizationSection.y = window.y + 77;
+
+        textLanguage.x = window.x + 350;
+        textLanguage.y = window.y + 28;
+
+        textLanguageCurrent.x = textLanguage.x;
+        textLanguageCurrent.y = textLanguage.y + 45;
+
+        textLanguageChoose.x = textLanguage.x;
+        textLanguageChoose.y = textLanguage.y + 75;
+
+        textLanguageChooseEN.x = l.curLanguage == "en" ? textLanguageChoose.x + 235 :textLanguageChoose.x + 175 ;
+        textLanguageChooseEN.y = textLanguageChoose.y + 5;
+
+        textLanguageChooseRU.x = l.curLanguage == "en" ? textLanguageChoose.x + 335 : textLanguageChoose.x + 279 ;
+        textLanguageChooseRU.y = textLanguageChoose.y + 5;
 
         textPesonalizationWallpaper.x = window.x + 350;
         textPesonalizationWallpaper.y = window.y + 28;

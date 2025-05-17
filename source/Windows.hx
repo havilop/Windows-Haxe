@@ -24,8 +24,10 @@ class Windows extends FlxState
     var menu:FlxSprite;
     var settings:SettingsApplication;
     var taskbarmenu:FlxButton;
+    var test:ModernWindow;
     static public var taskBar:TaskBar;
     static public var IsReset:Bool;
+    static public var IsSystem:Bool;
 
     public function ResetTaskBar() 
     {
@@ -53,6 +55,8 @@ class Windows extends FlxState
 
         bg = new FlxSprite(0,0,o.wallpaper);
         bg.loadGraphic(o.wallpaper);
+        bg.setGraphicSize(FlxG.width,FlxG.height);
+        bg.updateHitbox();
         bg.screenCenter(X);
         add(bg);
 
@@ -73,7 +77,22 @@ class Windows extends FlxState
     }
     override function update(elapsed:Float) {
         super.update(elapsed);
+        if (IsSystem == true)
+        {
+            settings = new SettingsApplication();
+            settings.currentSection = "system";
+            add(settings);
 
+          /*  test = new ModernWindow(500,"Test","assets/images/icons/null.png",function name() {
+                
+            }, function name() {
+                
+            }, function name() {
+                
+            }, true);
+       */ //   add(test);
+            IsSystem = false;
+        }
             if(IsReset == true)
         {
         taskBar = new TaskBar();
