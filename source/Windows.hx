@@ -11,6 +11,7 @@ import sys.io.File;
 
 typedef WindowsMain = {
     var wallpaper:String;
+    var FPS:Int;
     var taskbar:String;
     var curLanguage:String;
 } 
@@ -64,12 +65,12 @@ class Windows extends FlxState
         menu.visible = false;
         add(menu);
 
-
         taskBar = new TaskBar();
         taskBar.visible = false;
         add(taskBar);
 
-  
+        var testDesktop = new TestDesktop();
+        add(testDesktop);
 
         screenLogon = new Logon();
         add(screenLogon);
@@ -77,6 +78,10 @@ class Windows extends FlxState
     }
     override function update(elapsed:Float) {
         super.update(elapsed);
+
+        FlxG.drawFramerate = o.FPS;
+        FlxG.updateFramerate = o.FPS;
+        
         if (IsSystem == true)
         {
             settings = new SettingsApplication();

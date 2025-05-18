@@ -34,7 +34,7 @@ class MBRstate extends FlxState
                 }
             }
 
-            textMBR = new FlxText(0,1000,0,"Checking... MBR File",42);
+            textMBR = new FlxText(0,FlxG.height - 60,0,"Checking... MBR File",42);
             add(textMBR);
             Timer.delay(function MBRSTATUS() {
                 checkMBRstatus = true;

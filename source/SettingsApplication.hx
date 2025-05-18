@@ -1,3 +1,5 @@
+import flixel.FlxG;
+import flixel.FlxGame;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup;
 import flixel.text.FlxText;
@@ -11,6 +13,7 @@ import sys.io.File;
 
 typedef Setmbr = {
     var curLanguage:String;
+    var FPS:Int;
     var wallpaper:String;
     var taskbar:String;
 } 
@@ -41,6 +44,13 @@ class SettingsApplication extends FlxGroup
     var textLanguageChooseRU:FlxButton;
     var textLanguageChooseEN:FlxButton;
     var messageBox:MessageBox;
+    var textDisplay:FlxText;
+    var textDisplayFPS:FlxText;
+    var textDisplayFPSCUR:FlxText;
+    var displayBUTTONMINUS:FlxButton;
+    var displayBUTTONPLUS:FlxButton;
+
+
     
     
     public function AddUI() 
@@ -220,8 +230,56 @@ var cur = l.wallpaper;
         textLanguageChooseRU.updateHitbox();
         textLanguageChooseRU.visible = false;
         add(textLanguageChooseRU);
+
+        textDisplay = new FlxText(0,0,0,"",38);
+        textDisplay.color = 0x35599C;
+        textDisplay.font = l.curLanguage == "en" ? "assets/fonts/my.ttf" : "assets/fonts/ots.ttf";
+        textDisplay.text = l.curLanguage == "en" ? "Display" : "Дисплей";
+        textDisplay.visible = false;
+        add(textDisplay);
+
         
+        textDisplayFPS = new FlxText(0,0,0,"",28);
+        textDisplayFPS.color = 0x000000;
+        textDisplayFPS.font = l.curLanguage == "en" ? "assets/fonts/my.ttf" : "assets/fonts/ots.ttf";
+        textDisplayFPS.text = l.curLanguage == "en" ? "FPS: " : "FPS: ";
+        textDisplayFPS.visible = false;
+        add(textDisplayFPS);
+          var curf = l.FPS;
+        textDisplayFPSCUR = new FlxText(0,0,0,"",28);
+        textDisplayFPSCUR.color = 0x000000;
+        textDisplayFPSCUR.font = l.curLanguage == "en" ? "assets/fonts/my.ttf" : "assets/fonts/ots.ttf";
+        textDisplayFPSCUR.text = l.curLanguage == "en" ? '$curf' : '$curf';
+        textDisplayFPSCUR.visible = false;
+        add(textDisplayFPSCUR);
+
+        displayBUTTONMINUS = new FlxButton(0,0,"-",minus);
+        displayBUTTONMINUS.label.setFormat(null,16,FlxColor.WHITE,CENTER);
+        displayBUTTONMINUS.makeGraphic(25,25,FlxColor.GRAY);
+        displayBUTTONMINUS.updateHitbox();
+        add(displayBUTTONMINUS);
+
+        displayBUTTONPLUS = new FlxButton(0,0,"+",plus);
+        displayBUTTONPLUS.label.setFormat(null,16,FlxColor.WHITE,CENTER);
+        displayBUTTONPLUS.makeGraphic(25,25,FlxColor.GRAY);
+        displayBUTTONPLUS.updateHitbox();
+        add(displayBUTTONPLUS);
+
     }
+    public function plus() 
+        {
+            l.FPS += l.FPS >= 240 ? 0 : l.FPS <= 240 ? 5 : 5;
+        FlxG.drawFramerate = l.FPS;
+        FlxG.updateFramerate = l.FPS;
+            File.saveContent("assets/Windows/mbr.json", Json.stringify(l, null,""));
+        }
+           public function minus() 
+        {
+            l.FPS -= l.FPS <= 60 ? 0 : l.FPS >= 60 ? 5 : 5;
+        FlxG.drawFramerate = l.FPS;
+        FlxG.updateFramerate = l.FPS;
+            File.saveContent("assets/Windows/mbr.json", Json.stringify(l, null,""));
+        }
     public function AddBoxRU() 
     {
         messageBox = new MessageBox(l.curLanguage == "en" ? "You need restart your System\nThat language will work right\n\nRestart now?" : "Вы должны перезапустить систему\nчтобы язык работал правильно\n\nПерезагрузить сейчас?",
@@ -322,6 +380,14 @@ var cur = l.wallpaper;
                 textLanguageChoose.visible = true;
                 textLanguageChooseEN.visible = true;
                 textLanguageChooseRU.visible = true;
+                textDisplay.visible = true;
+                textDisplayFPS.visible = true;
+                textDisplayFPSCUR.visible = true;
+                displayBUTTONPLUS.visible = true;
+                displayBUTTONMINUS.visible = true;
+                var curff = l.FPS;
+                textDisplayFPSCUR.text = l.curLanguage == "en" ? '$curff' : '$curff';
+
             case "personalization":
                 systemSection.loadGraphic("assets/images/settings/system.png");
 
@@ -355,6 +421,11 @@ var cur = l.wallpaper;
                 textLanguageChoose.visible = false;
                 textLanguageChooseEN.visible = false;
                 textLanguageChooseRU.visible = false;
+                textDisplay.visible = false;
+                textDisplayFPS.visible = false;
+                textDisplayFPSCUR.visible = false;
+                 displayBUTTONPLUS.visible = false;
+                displayBUTTONMINUS.visible = false;
         }
         bg.x = window.x;
         bg.y = window.y;
@@ -416,5 +487,23 @@ var cur = l.wallpaper;
 
         down.x =  l.curLanguage == "en" ? textTaskBarChange.x + 250 : textTaskBarChange.x + 390;
         down.y = textTaskBarChange.y + 5;
+
+        textDisplay.x = window.x + 350;
+        textDisplay.y = textLanguageChoose.y + 35;
+
+        textDisplayFPS.x = textDisplay.x;
+        textDisplayFPS.y = textDisplay.y + 50;
+
+        textDisplayFPSCUR.x = textDisplayFPS.x + 65;
+        textDisplayFPSCUR.y = textDisplayFPS.y;
+
+        displayBUTTONPLUS.x = textDisplayFPSCUR.x + 75;
+        displayBUTTONPLUS.y = textDisplayFPSCUR.y + 5;
+
+        displayBUTTONMINUS.x = textDisplayFPSCUR.x + 50;
+        displayBUTTONMINUS.y = textDisplayFPSCUR.y + 5;
+
+        FlxG.drawFramerate = l.FPS;
+        FlxG.updateFramerate = l.FPS;
     }
 }

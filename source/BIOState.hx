@@ -99,10 +99,10 @@ Timer.delay(function name() {
         var text = new FlxText(10, 100, FlxG.width - 20, '$cpu$gpu$ram', 16);
         text.setFormat(null, 16, 0xFFFFFF, "left");
         add(text);
-        var tex = new FlxText(10, 900,0,"Press ESC to load MBR", 52);
+        var tex = new FlxText(10, FlxG.height - 135,0,"Press ESC to load MBR", 52);
         tex.setFormat(null, 52, 0xFFFFFF, "left");
         add(tex);
-        var te = new FlxText(10, 1000, 0,"Press DEL to BIOS", 52);
+        var te = new FlxText(10, FlxG.height - 60, 0,"Press DEL to BIOS", 52);
         te.setFormat(null, 52, 0xFFFFFF, "left");
         add(te);
         var osName = System.platformName;
@@ -151,15 +151,15 @@ if (bios == true && allow == false)
             fastText = new FlxText(0,100,0,"FastBios",52);
             add(fastText);
 
-            fastTextVar = new FlxText(0,1000,0,fastVar,52);
+            fastTextVar = new FlxText(0,FlxG.height - 60,0,fastVar,52);
             fastTextVar.visible = false;
             add(fastTextVar);
 
-            autoTextVar = new FlxText(0,1000,0,autoVar,52);
+            autoTextVar = new FlxText(0,FlxG.height - 60,0,autoVar,52);
             autoTextVar.visible = false;
             add(autoTextVar);
 
-            autoDec = new FlxText(0,900,0,"if AutoMBR Launch true then every launch MBR will be automatically launch",42);
+            autoDec = new FlxText(0,FlxG.height - 135 ,0,"if AutoMBR Launch true then every launch MBR will be automatically launch",42);
             autoDec.visible = false;
             add(autoDec);
 
@@ -300,6 +300,8 @@ isreset = false;
             isreset = true;
          curColumn = reset;
        }
+        FlxG.drawFramerate = 60;
+        FlxG.updateFramerate = 60;
     }
     override function destroy() {
         super.destroy(); // Важно вызывать родительский destroy!

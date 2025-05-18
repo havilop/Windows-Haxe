@@ -126,8 +126,9 @@ if (FileSystem.exists("assets/data/settings.json"))
 						background.screenCenter(XY);
 						add(background);
 
-						bar = new FlxSprite(0,0,"assets/images/setup/bar.png");
-						bar.screenCenter(XY);
+						bar = new FlxSprite(0,FlxG.height - 120,"assets/images/setup/bar.png");
+						bar.setGraphicSize(FlxG.width,bar.height);
+						bar.updateHitbox();
 						add(bar);
 
 						diskText = new FlxText(0,0,0,"Where do you want to install Windows?",26);
@@ -199,8 +200,9 @@ if (FileSystem.exists("assets/data/settings.json"))
 					installButton.kill();
 			      
 
-				   var barStep = new FlxSprite(0,0,"assets/images/setup/barStepTwo.png");
-				   barStep.screenCenter(XY);
+				   var barStep = new FlxSprite(0,FlxG.height - 120,"assets/images/setup/barStepTwo.png");
+				   	barStep.setGraphicSize(FlxG.width,barStep.height);
+					barStep.updateHitbox();
 				   add(barStep);
 
 				   Timer.delay(function name(){
@@ -220,7 +222,7 @@ if (FileSystem.exists("assets/data/settings.json"))
 					}	
 			
 					// Создаём или перезаписываем файл mbr.json
-					var content = "{ \"bootloader\": \"MBR\", \"curLanguage\": \"en\", \"wallpaper\": \"assets/images/wallpapers/wallpaper.png\" }"; // Содержимое JSON
+					var content = "{ \"bootloader\": \"MBR\", \"curLanguage\": \"en\", \"wallpaper\": \"assets/images/wallpapers/wallpaper.png\", \"FPS\": 60}"; // Содержимое JSON
 					File.saveContent(filePath, content);
 					trace('file: $filePath');
 					
