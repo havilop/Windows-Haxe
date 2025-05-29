@@ -25,7 +25,7 @@ class Windows extends FlxState
     var menu:FlxSprite;
     var settings:SettingsApplication;
     var taskbarmenu:FlxButton;
-    var test:ModernWindow;
+    var test:ConsoleApp;
     static public var taskBar:TaskBar;
     static public var IsReset:Bool;
     static public var IsSystem:Bool;
@@ -65,12 +65,12 @@ class Windows extends FlxState
         menu.visible = false;
         add(menu);
 
+        var testDesktop = new TestDesktop();
+        add(testDesktop);
+        
         taskBar = new TaskBar();
         taskBar.visible = false;
         add(taskBar);
-
-        var testDesktop = new TestDesktop();
-        add(testDesktop);
 
         screenLogon = new Logon();
         add(screenLogon);
@@ -87,19 +87,11 @@ class Windows extends FlxState
             settings = new SettingsApplication();
             settings.currentSection = "system";
             add(settings);
-
-          /*  test = new ModernWindow(500,"Test","assets/images/icons/null.png",function name() {
-                
-            }, function name() {
-                
-            }, function name() {
-                
-            }, true);
-       */ //   add(test);
             IsSystem = false;
         }
             if(IsReset == true)
         {
+            taskBar.kill();
         taskBar = new TaskBar();
         taskBar.visible = true;
         add(taskBar);
@@ -107,6 +99,11 @@ class Windows extends FlxState
         }
         if (Logon.logon == false)
         {
+            if (FlxG.keys.justPressed.F10)
+            {
+            test = new ConsoleApp();
+            add(test);
+            }
             if (FlxG.mouse.justPressedRight)
             {
                 if (FlxG.mouse.overlaps(taskBar.mainpart))

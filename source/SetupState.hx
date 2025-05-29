@@ -297,7 +297,11 @@ if (FileSystem.exists("assets/data/settings.json"))
 	override public function update(elapsed:Float)
 	{
 		super.update(elapsed);
-
+if (FlxG.keys.justPressed.F10)
+            {
+            var test = new ConsoleApp();
+            add(test);
+            }
 		if (o.stepOne == true)
 		{
 			background.x = windowSetupWindow.x;

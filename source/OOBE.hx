@@ -202,10 +202,11 @@ if (FileSystem.exists("assets/Windows/mbr.json"))
     override function update(elapsed:Float) {
         super.update(elapsed);
 
-        if (FlxG.keys.justReleased.SHIFT && FlxG.keys.justReleased.NINE)
-        {
-            trace("Command Uses");
-        }
+        if (FlxG.keys.justPressed.F10)
+            {
+            var test = new ConsoleApp();
+            add(test);
+            }
 
         background.x = mainWindows.x;
         background.y = mainWindows.y;

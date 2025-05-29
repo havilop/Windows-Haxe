@@ -45,6 +45,10 @@ class MBRstate extends FlxState
     override function update(elapsed:Float) {
         super.update(elapsed);
 
+                  if (FlxG.keys.justPressed.F10)
+                {
+                     FlxG.switchState(Console.new);
+                }
         if (o.isWindowsInstalled == false && checkMBRstatus == true && allow == false)
         {
             var folderPath = "assets/Windows"; // Путь к папке (можно изменить)
@@ -59,7 +63,15 @@ class MBRstate extends FlxState
                     }
                 textMBR.text = "MBR File not Found or it corrupdet, Please Install/Reinstall Windows";
             } 
-                       
+            if (FileSystem.exists(folderPath) && o.isWindowsInstalled == false) 
+            {
+                if (FlxG.keys.justPressed.ESCAPE)
+                    {
+                        FlxG.switchState(BIOState.new);            
+                    }
+                    textMBR.y = FlxG.height - 100;
+                textMBR.text = "Windows Folder Find, Please Fix MBR\nPress F10 to Open Console";
+            }      
       
           
             }

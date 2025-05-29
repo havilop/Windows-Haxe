@@ -47,7 +47,6 @@ class TestDesktop extends FlxGroup
                             x: Reflect.field(jsonData, '${field}.x') ?? 0,
                             y: Reflect.field(jsonData, '${field}.y') ?? 0
                         };
-                        
                         folders.set(folderName, folderData);
                     }
                 }

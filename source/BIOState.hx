@@ -19,6 +19,7 @@ typedef BiosSettings = {
       public var autoMBR:Bool;
       var isWindowsInstalled:Bool;
       public var fastBIOS:Bool;
+      var console:Bool;
 } 
 
 enum BiosColumn {
@@ -126,7 +127,12 @@ super.update(elapsed);
 if (o.autoMBR == true && isTwoSecond == true && biosIs == false)
     {
         Timer.delay(function name() {
+                   if (o.console == true) {
+            FlxG.switchState(Console.new);
+        }
+        if(o.console == false) {
             FlxG.switchState(MBRstate.new);
+        }
         }, 1);
     }
 
@@ -220,8 +226,12 @@ if (FlxG.keys.justPressed.DELETE)
 }
 if (FlxG.keys.justPressed.ESCAPE && notBios == true)
     {
-        FlxG.switchState(MBRstate.new);
-      
+       if (o.console == true) {
+            FlxG.switchState(Console.new);
+        }
+        if(o.console == false) {
+            FlxG.switchState(MBRstate.new);
+        }
     }
 if (FlxG.keys.justPressed.ESCAPE && notBios == false)
      {
