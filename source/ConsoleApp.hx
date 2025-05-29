@@ -96,10 +96,13 @@ class ConsoleApp extends FlxGroup
                 case "shutdown":
                     logToConsole("shutdown /off");
                     logToConsole("shutdown /restart");
+                case "explorer.exe":
+                    logToConsole("Success!");
                 case "apps":
                     logToConsole("settings.exe");
                     logToConsole("logon.exe");
                      logToConsole("taskbar.exe");
+                     logToConsole("explorer.exe");
                 default: 
                      logToConsole('Error invalid command $text');
             }
