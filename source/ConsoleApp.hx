@@ -19,8 +19,15 @@ class ConsoleApp extends FlxGroup
     private var consoleInput:FlxInputText;
     private var consoleOutput:FlxText;
     var bg:FlxSprite;
+    var listWords:Array<String> = ["god","russia","sex","windowshaxe","girl","house","engineer"];
     var listCommand:Array<String> = ["help","exit","clear","shutdown","apps"];
     var o:Cs;
+
+
+    	public function int(from:Int, to:Int):Int
+	{
+		return from + Math.floor(((to - from + 1) * Math.random()));
+	}
 
     public function new ()
     {
@@ -61,7 +68,7 @@ class ConsoleApp extends FlxGroup
         }, true);
         add(window);
     }
- private function onConsoleCommandEntered(text:String, action:String):Void
+ private function onConsoleCommandEntered(text:Dynamic, action:String):Void
     {
          if (action == "enter")
         {
@@ -85,9 +92,6 @@ class ConsoleApp extends FlxGroup
                     var logon = new Logon();
                     add(logon);
                  case "taskbar.exe":
-                   // var taskbar = new TaskBar();
-                   // add(taskbar);
-
                    Windows.IsReset = true;
                 case "shutdown /off":
                     Sys.exit(0);
@@ -103,6 +107,14 @@ class ConsoleApp extends FlxGroup
                     logToConsole("logon.exe");
                      logToConsole("taskbar.exe");
                      logToConsole("explorer.exe");
+                case "random":
+                   var max = listWords.length - 1;
+                   trace(max);
+                   var random = int(0,max);
+                   trace(random);
+                   var word = listWords[random];
+                   trace(word);
+                    logToConsole(word);
                 default: 
                      logToConsole('Error invalid command $text');
             }
