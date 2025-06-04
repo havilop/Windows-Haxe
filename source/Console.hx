@@ -7,6 +7,13 @@ import flixel.FlxG;
 import flixel.addons.ui.FlxInputText;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
+import states.BIOState;
+import states.LoadState;
+import states.MBRstate;
+import states.OOBEState;
+import states.SetupState;
+import states.WindowsState;
+
 
 typedef ConsoleType = {
     var isWindowsInstalled:Bool;

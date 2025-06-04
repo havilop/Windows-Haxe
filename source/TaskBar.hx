@@ -10,6 +10,15 @@ import haxe.Timer;
 import lime.media.vorbis.Vorbis;
 import sys.FileSystem;
 import sys.io.File;
+import applications.SettingsApplication;
+import applications.ConsoleApp;
+import states.BIOState;
+import states.LoadState;
+import states.MBRstate;
+import states.OOBEState;
+import states.SetupState;
+import states.WindowsState;
+
 
 typedef TaskBarSettings = 
 {
@@ -141,7 +150,7 @@ class TaskBar extends FlxGroup
         add(menuextraOFF);
 
         menuextraSETTINGS = new FlxButton(0,0,"",function Open() {
-           Windows.IsSystem = true;
+           WindowsState.IsSystem = true;
             swithcFirstTimed = true;
             appear();
         });

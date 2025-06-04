@@ -1,5 +1,5 @@
 package;
-
+import states.BIOState;
 import flixel.FlxGame;
 import openfl.display.Sprite;
 

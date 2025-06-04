@@ -1,4 +1,4 @@
-package;
+package states;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -10,6 +10,13 @@ import haxe.Json;
 import haxe.Timer;
 import sys.FileSystem;
 import sys.io.File;
+import states.BIOState;
+import states.LoadState;
+import states.MBRstate;
+import states.OOBEState;
+import states.SetupState;
+import applications.ConsoleApp;
+import states.WindowsState;
 
 
 typedef Settings = {
