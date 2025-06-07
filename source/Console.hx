@@ -18,12 +18,14 @@ import states.WindowsState;
 typedef ConsoleType = {
     var isWindowsInstalled:Bool;
     var console:Bool;
+    var autoMBR:Bool;
+    var fastBIOS:Bool;
 } 
 class Console extends FlxState
 {
     private var consoleInput:FlxInputText;
     private var consoleOutput:FlxText;
-    var listCommand:Array<String> = ["/fixmbr","/help","/exit","/clear","/loadmbr","/autoconsole"];
+    var listCommand:Array<String> = ["/fixmbr","/help","/exit","/clear","/loadmbr","/autoconsole","/autombr","/install windows","/fastBIOS"];
     var o:ConsoleType;
     var isAutoConsole:Bool = false;
     var cmd:String = null;
@@ -89,6 +91,22 @@ class Console extends FlxState
                  o.console = true;
                 File.saveContent("assets/data/settings.json", Json.stringify(o, null,""));
                 logToConsole("Succes!");
+                case "/install windows":
+                o.isWindowsInstalled = false;
+                File.saveContent("assets/data/settings.json", Json.stringify(o, null,""));
+                LoadState.setLoadingScreen(1000,SetupState.new);
+                case "/autombr false":
+                o.autoMBR = false;
+                File.saveContent("assets/data/settings.json", Json.stringify(o, null,""));
+                case "/autombr true":
+                o.autoMBR = true;
+                File.saveContent("assets/data/settings.json", Json.stringify(o, null,""));
+                case "/fastBIOS true":
+                o.fastBIOS = true;
+                File.saveContent("assets/data/settings.json", Json.stringify(o, null,""));
+                case "/fastBIOS false":
+                o.fastBIOS = false;
+                File.saveContent("assets/data/settings.json", Json.stringify(o, null,""));
                 default: 
                      logToConsole('Error invalid command $text');
             }

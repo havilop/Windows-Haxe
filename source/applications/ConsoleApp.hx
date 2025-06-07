@@ -165,15 +165,15 @@ class ConsoleApp extends FlxGroup
         bg.x = window.x;
         bg.y = window.y;
 
-        if (upstored <= -50) {
-            upstored = -30;
-        }
         if (FlxG.keys.justPressed.UP)
         {
             IsUPorDOWN = true;
             up = true;
             down = false;
             upstored -= 20;
+             if (upstored <= -50) {
+            upstored = -30;
+        }
         }
         if (FlxG.keys.justPressed.DOWN)
         {
@@ -186,6 +186,9 @@ class ConsoleApp extends FlxGroup
         {
             if (up == true)
             {
+            if (upstored <= -50) {
+            upstored = -30;
+        }
             consoleOutput.y = window.y - upstored; 
             }
             if (down == true)             {
