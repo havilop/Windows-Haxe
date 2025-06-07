@@ -36,7 +36,7 @@ class TaskBar extends FlxGroup
     var allowcover:Bool = false;
     var timeText:FlxText;
     var bgturnoff:FlxSprite;
-      var was:Bool = false;
+    var was:Bool = false;
     var off:FlxButton;
     var restart:FlxButton;
     var volume:FlxButton;

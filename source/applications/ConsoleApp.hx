@@ -26,9 +26,10 @@ class ConsoleApp extends FlxGroup
     var window:ModernWindow;
     private var consoleInput:FlxInputText;
     private var consoleOutput:FlxText;
+    var IsRandom:Bool;
     var bg:FlxSprite;
     var listWords:Array<String> = ["god","russia","sex","windowshaxe","girl","house","engineer"];
-    var listCommand:Array<String> = ["help","exit","clear","shutdown","apps"];
+    var listCommand:Array<String> = ["help","exit","clear","shutdown","apps","random"];
     var o:Cs;
 
 
@@ -116,17 +117,27 @@ class ConsoleApp extends FlxGroup
                      logToConsole("taskbar.exe");
                      logToConsole("explorer.exe");
                 case "random":
-                   var max = listWords.length - 1;
+                consoleOutput.text = "";
+                logToConsole("Type stop to exit random words");
+                    IsRandom = true;
+                case "stop":
+                    IsRandom = false;
+                case "":
+
+                default: 
+                     logToConsole('Error invalid command $text');
+            }
+            
+        if (IsRandom == true)
+        {
+             var max = listWords.length - 1;
                    trace(max);
                    var random = int(0,max);
                    trace(random);
                    var word = listWords[random];
                    trace(word);
                     logToConsole(word);
-                default: 
-                     logToConsole('Error invalid command $text');
-            }
-         
+        }
             consoleInput.text = "";
             consoleInput.hasFocus = false;
             consoleInput.hasFocus = true;
@@ -143,6 +154,7 @@ class ConsoleApp extends FlxGroup
     override public function update(elapsed:Float):Void
     {
         super.update(elapsed);
+
         bg.x = window.x;
         bg.y = window.y;
 
