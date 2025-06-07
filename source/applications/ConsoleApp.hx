@@ -26,9 +26,15 @@ class ConsoleApp extends FlxGroup
     var window:ModernWindow;
     private var consoleInput:FlxInputText;
     private var consoleOutput:FlxText;
+    var storedVarOutPut:Dynamic;
+    var IsUPorDOWN:Bool = false;
     var IsRandom:Bool;
+    var up:Bool;
+    var upstored:Dynamic;
+    var downstored:Dynamic;
+    var down:Bool;
     var bg:FlxSprite;
-    var listWords:Array<String> = ["god","russia","sex","windowshaxe","girl","house","engineer"];
+    var listWords:Array<String> = ["god","russia","sex","windowshaxe","girl","house","engineer","centre","throw","work","water","bottle","sunbed","loggia","button","bother","tunell","hardwar","rabbit","ride","blow up","click","chaos","virus","USA","tramp","potato","harvest","host","fine","diamond"];
     var listCommand:Array<String> = ["help","exit","clear","shutdown","apps","random"];
     var o:Cs;
 
@@ -76,16 +82,18 @@ class ConsoleApp extends FlxGroup
             this.kill();
         }, true);
         add(window);
+        upstored = -30;
     }
  private function onConsoleCommandEntered(text:Dynamic, action:String):Void
     {
          if (action == "enter")
         {
             switch (text)
-            {
-                case "clear":
+            {                case "clear":
                 consoleOutput.text = "";
+                upstored = -30;
                 logToConsole("Type help to list commands");
+                
                 case "help": 
                     for (cmd in listCommand)
                     {
@@ -150,7 +158,6 @@ class ConsoleApp extends FlxGroup
              consoleInput.hasFocus = false;
              consoleInput.hasFocus = true;
     }
-    
     override public function update(elapsed:Float):Void
     {
         super.update(elapsed);
@@ -158,10 +165,39 @@ class ConsoleApp extends FlxGroup
         bg.x = window.x;
         bg.y = window.y;
 
+        if (upstored <= -50) {
+            upstored = -30;
+        }
+        if (FlxG.keys.justPressed.UP)
+        {
+            IsUPorDOWN = true;
+            up = true;
+            down = false;
+            upstored -= 20;
+        }
+        if (FlxG.keys.justPressed.DOWN)
+        {
+             IsUPorDOWN = true;
+             up = false;
+             down = true;
+             upstored += 20;
+        }
+        if (IsUPorDOWN == true ) 
+        {
+            if (up == true)
+            {
+            consoleOutput.y = window.y - upstored; 
+            }
+            if (down == true)             {
+            consoleOutput.y = window.y - upstored; 
+            }
+        }
         consoleOutput.x = window.x + 10;
+        if (IsUPorDOWN == false) {
         consoleOutput.y = window.y + 30;
-
+        } 
         consoleInput.x = window.x + 3;
         consoleInput.y = window.y + 480;
+
     }
 }
