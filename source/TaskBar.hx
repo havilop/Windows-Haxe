@@ -91,7 +91,8 @@ class TaskBar extends FlxGroup
             add(bgturnoff);
 
             off = new FlxButton(0,0,"",function name() {
-                Sys.exit(0);
+                var off = new CommandFunction("shutdown /off");
+                add(off);
             });
             off.screenCenter(XY);
             off.x -= 150;

@@ -83,11 +83,11 @@ class BIOState extends FlxState
         {
             if (o.console == true)
             {
-                LoadState.setLoadingScreen(500,Console.new);
+                LoadState.setLoadingScreen(1,Console.new);
             }
             if (o.console == false)
             {
-                LoadState.setLoadingScreen(500,MBRstate.new);
+                LoadState.setLoadingScreen(1,MBRstate.new);
             }
         }
 
@@ -95,11 +95,11 @@ class BIOState extends FlxState
         {
             if (o.console == true)
             {
-                LoadState.setLoadingScreen(500,Console.new);
+                LoadState.setLoadingScreen(1,Console.new);
             }
             if (o.console == false)
             {
-                LoadState.setLoadingScreen(500,MBRstate.new);
+                LoadState.setLoadingScreen(1,MBRstate.new);
             }
         }
     }

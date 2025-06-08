@@ -20,12 +20,14 @@ import states.WindowsState;
 typedef Cs = {
     var isWindowsInstalled:Bool;
     var console:Bool;
+    var autoMBR:Bool;
+    var fastBIOS:Bool;
 } 
 class ConsoleApp extends FlxGroup
 {
     var window:ModernWindow;
-    private var consoleInput:FlxInputText;
-    private var consoleOutput:FlxText;
+    public var consoleInput:FlxInputText;
+    public var consoleOutput:FlxText;
     var storedVarOutPut:Dynamic;
     var IsUPorDOWN:Bool = false;
     var IsRandom:Bool;
@@ -84,42 +86,49 @@ class ConsoleApp extends FlxGroup
         add(window);
         upstored = -30;
     }
- private function onConsoleCommandEntered(text:Dynamic, action:String):Void
+ public function onConsoleCommandEntered(text:Dynamic, action:String):Void
     {
          if (action == "enter")
         {
             switch (text)
-            {                case "clear":
+            {   case "clear":
                 consoleOutput.text = "";
                 upstored = -30;
                 logToConsole("Type help to list commands");
-                
+                stopFunction();
                 case "help": 
                     for (cmd in listCommand)
                     {
                           logToConsole(cmd);
                     }
+                    stopFunction();
                 case "exit":
                      this.kill();
                 case "settings.exe":
                     var settings = new SettingsApplication();
                     settings.currentSection = "system";
                     add(settings);
+                    stopFunction();
                 case "logon.exe":
                     var logon = new Logon();
                     add(logon);
+                    stopFunction();
                  case "taskbar.exe":
+                    stopFunction();
                    WindowsState.IsReset = true;
                 case "shutdown /off":
                     Sys.exit(0);
                 case "shutdown /restart":
                     LoadState.setLoadingScreen(2000,BIOState.new);
                 case "shutdown":
+                    stopFunction();
                     logToConsole("shutdown /off");
                     logToConsole("shutdown /restart");
                 case "explorer.exe":
+                    stopFunction();
                     logToConsole("Success!");
                 case "apps":
+                    stopFunction();
                     logToConsole("settings.exe");
                     logToConsole("logon.exe");
                      logToConsole("taskbar.exe");
@@ -132,6 +141,18 @@ class ConsoleApp extends FlxGroup
                     IsRandom = false;
                 case "":
 
+                case "/autombr false":
+                o.autoMBR = false;
+                File.saveContent("assets/data/settings.json", Json.stringify(o, null,""));
+                case "/autombr true":
+                o.autoMBR = true;
+                File.saveContent("assets/data/settings.json", Json.stringify(o, null,""));
+                case "/fastBIOS true":
+                o.fastBIOS = true;
+                File.saveContent("assets/data/settings.json", Json.stringify(o, null,""));
+                case "/fastBIOS false":
+                o.fastBIOS = false;
+                File.saveContent("assets/data/settings.json", Json.stringify(o, null,""));
                 default: 
                      logToConsole('Error invalid command $text');
             }
@@ -152,11 +173,15 @@ class ConsoleApp extends FlxGroup
         }
     }
     
-    private function logToConsole(message:String):Void
+    public function logToConsole(message:String):Void
     {
         consoleOutput.text += "> " + message + "\n";
              consoleInput.hasFocus = false;
              consoleInput.hasFocus = true;
+    }
+    private function stopFunction() 
+    {
+        IsRandom = false;
     }
     override public function update(elapsed:Float):Void
     {

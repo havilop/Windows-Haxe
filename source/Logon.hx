@@ -1,3 +1,4 @@
+import haxe.Timer;
 import flixel.FlxSprite;
 import flixel.addons.ui.FlxUIInputText;
 import flixel.group.FlxGroup;
@@ -19,10 +20,12 @@ class Logon extends FlxGroup
     private var bg:FlxSprite;
     static public var logon:Bool;
     private var user:FlxSprite;
+    var visionButton:FlxButton;
     private var inputPassword:FlxUIInputText;
     private var userNameText:FlxText;
     private var o:MbrSettings;
     private var is:Bool;
+    var isVision:Bool = true;
     private var Next:FlxButton;
     private var timeText:FlxText;
 
@@ -61,7 +64,7 @@ class Logon extends FlxGroup
         user.screenCenter(XY);
         user.y -= 100;
         add(user);
-
+        
         timeText = new FlxText(10, 10, 0, "", 32);
         timeText.font = "assets/fonts/my.ttf";
         timeText.color = FlxColor.WHITE;
@@ -88,13 +91,36 @@ class Logon extends FlxGroup
              inputPassword = new FlxUIInputText(100,50,200,"",16);
                 inputPassword.font = "assets/fonts/my.ttf";
                 inputPassword.visible = true;
+                inputPassword.passwordMode = true;
                 inputPassword.screenCenter(XY);
                 inputPassword.y += 100;
                 add(inputPassword);
+
+                visionButton = new FlxButton(0,0,'',function name() {
+                if (isVision == true) {
+                inputPassword.passwordMode = false;
+                visionButton.loadGraphic("assets/images/visionOn.png");
+                 Timer.delay(function name() {
+                isVision = false; 
+                 },100);
+                }
+            
+                 if (isVision == false) {
+                inputPassword.passwordMode = true;
+                visionButton.loadGraphic("assets/images/visionOff.png");
+                isVision = true;
+                }
+                });
+                visionButton.loadGraphic("assets/images/visionOff.png");
+                visionButton.updateHitbox();
+                visionButton.screenCenter(XY);
+                visionButton.y = inputPassword.y;
+                visionButton.x += 135;
+                add(visionButton);
+
             Next.screenCenter(XY);
             Next.y += 150;
             is = true;
-
         }  
         if (o.password == "") {
             Next.screenCenter(XY);
@@ -107,6 +133,7 @@ updateTime();
     override function update(elapsed:Float) {
         super.update(elapsed);
         updateTime();
+        inputPassword;
     }
      private function updateTime():Void
     {
