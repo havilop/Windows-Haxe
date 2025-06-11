@@ -23,7 +23,7 @@ typedef Cs = {
     var autoMBR:Bool;
     var fastBIOS:Bool;
 } 
-class ConsoleApp extends FlxGroup
+class ConsoleApp extends App
 {
     var window:ModernWindow;
     public var consoleInput:FlxInputText;
@@ -40,7 +40,6 @@ class ConsoleApp extends FlxGroup
     var listCommand:Array<String> = ["help","exit","clear","shutdown","apps","random"];
     var o:Cs;
 
-
     	public function int(from:Int, to:Int):Int
 	{
 		return from + Math.floor(((to - from + 1) * Math.random()));
@@ -49,6 +48,7 @@ class ConsoleApp extends FlxGroup
     public function new ()
     {
         super();
+        super.taskbar("console");
         window = new ModernWindow(900,"Console","assets/images/icons/null.png",function appear() 
         {
 
@@ -77,11 +77,12 @@ class ConsoleApp extends FlxGroup
         }
         },function exit() 
         {
+           App.listApplications.remove("console");
+            this.updateItems();
             this.kill();
         },
         function minus() 
         {
-            this.kill();
         }, true);
         add(window);
         upstored = -30;
@@ -119,6 +120,13 @@ class ConsoleApp extends FlxGroup
                 case "shutdown /off":
                     Sys.exit(0);
                 case "shutdown /restart":
+                    for (i in App.listApplications)
+                    {
+                        trace(i);
+                        App.listApplications.remove(i);
+                        trace(App.listApplications);
+                    }
+                    trace(App.listApplications);
                     LoadState.setLoadingScreen(2000,BIOState.new);
                 case "shutdown":
                     stopFunction();

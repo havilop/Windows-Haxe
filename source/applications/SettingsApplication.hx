@@ -26,7 +26,7 @@ typedef Setmbr = {
     var taskbar:String;
 } 
 
-class SettingsApplication extends FlxGroup
+class SettingsApplication extends App
 {
     public var currentSection:String;
     var bg:FlxSprite;
@@ -345,6 +345,7 @@ var cur = l.wallpaper;
     public function new() 
     {
         super();
+        super.taskbar("settings");
     if (FileSystem.exists("assets/Windows/mbr.json"))
         {
             try 
@@ -359,6 +360,8 @@ var cur = l.wallpaper;
             AddUI();
         }, function name() 
         {
+            App.listApplications.remove("settings");
+            this.updateItems();
             RemoveUI();
         },true);
         window.screenCenter(XY);

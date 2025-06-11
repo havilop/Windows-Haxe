@@ -1,3 +1,4 @@
+import haxe.Log;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup;
@@ -38,6 +39,7 @@ class TaskBar extends FlxGroup
     var bgturnoff:FlxSprite;
     var was:Bool = false;
     var off:FlxButton;
+    public var listApplications:Array<String> = [];
     var restart:FlxButton;
     var volume:FlxButton;
     var swithcFirstTimed:Bool = false;
@@ -46,6 +48,11 @@ class TaskBar extends FlxGroup
     var windowEXIT:CustomWindow;
     var menuextraSETTINGS:FlxButton;
     var menuextraOFF:FlxButton;
+
+    public function updateTaskBarMembers() 
+    {
+        trace("Updated",listApplications);
+    }
     public function new() {
         super();
         if (FileSystem.exists("assets/Windows/mbr.json"))

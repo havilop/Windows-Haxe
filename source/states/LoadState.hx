@@ -24,7 +24,7 @@ static public function setLoadingScreen(time:Int,state:NextState) {
     override function create() {
         super.create();
         FlxG.mouse.visible = false;
-
+        App.isWindowsState = false;
     
 
 

@@ -53,7 +53,7 @@ class WindowsState extends FlxState
         FlxG.mouse.visible = true;
         FlxG.mouse.useSystemCursor = true;
         FlxG.autoPause = false;
-
+        App.isWindowsState = true;
         if (FileSystem.exists("assets/Windows/mbr.json"))
         {
             try 
@@ -111,6 +111,7 @@ class WindowsState extends FlxState
             if (FlxG.keys.justPressed.F10)
             {
             test = new ConsoleApp();
+            test.nameApp = "console";
             add(test);
             }
             if (FlxG.mouse.justPressedRight)

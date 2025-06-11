@@ -28,7 +28,7 @@ class TestDesktop extends FlxGroup
                 // Перебираем все поля в JSON
                 for (field in Reflect.fields(jsonData))
                 {
-                    if (StringTools.startsWith(field, "folder_"))
+                    if (StringTools.startsWith(field, ".exe"))
                     {
                         var fieldValue = Reflect.field(jsonData, field);
                         
@@ -39,7 +39,7 @@ class TestDesktop extends FlxGroup
                         }
                         
                         // Получаем имя папки (часть после folder_)
-                        var folderName = field.substr("folder_".length);
+                        var folderName = field.substr(".exe".length);
                         
                         // Создаем объект с данными
                         var folderData:FolderData = {
