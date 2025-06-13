@@ -36,6 +36,7 @@ class WindowsState extends FlxState
     var taskbarmenu:FlxButton;
     var test:ConsoleApp;
     static public var taskBar:TaskBar;
+    static public var isConsole:Bool;
     static public var IsReset:Bool;
     static public var IsSystem:Bool;
 

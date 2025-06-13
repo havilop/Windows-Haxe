@@ -75,18 +75,19 @@ class ConsoleApp extends App
             var data = File.getContent("assets/data/settings.json");
             o = Json.parse(data);
         }
-        },function exit() 
-        {
-           App.listApplications.remove("console");
-            this.updateItems();
-            this.kill();
-        },
+        },exit,
         function minus() 
         {
         }, true);
         add(window);
         upstored = -30;
     }
+  public function exit() 
+        {
+           App.listApplications.remove("console");
+            this.updateItems();
+            this.kill();
+        }
  public function onConsoleCommandEntered(text:Dynamic, action:String):Void
     {
          if (action == "enter")
@@ -104,11 +105,9 @@ class ConsoleApp extends App
                     }
                     stopFunction();
                 case "exit":
-                     this.kill();
+                     exit();
                 case "settings.exe":
-                    var settings = new SettingsApplication();
-                    settings.currentSection = "system";
-                    add(settings);
+                    WindowsState.IsSystem = true;
                     stopFunction();
                 case "logon.exe":
                     var logon = new Logon();
@@ -235,5 +234,9 @@ class ConsoleApp extends App
         consoleInput.x = window.x + 3;
         consoleInput.y = window.y + 480;
 
+    }
+    override function destroy() {
+        super.destroy();
+        App.listApplications.remove("console");
     }
 }

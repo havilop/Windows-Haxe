@@ -11,6 +11,7 @@ class CommandFunction extends FlxGroup
         add(console);
 
         Timer.delay(function name() {
+            App.listApplications.remove("console");
             this.kill();
         },5);
     }

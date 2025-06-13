@@ -517,4 +517,8 @@ var cur = l.wallpaper;
         FlxG.drawFramerate = l.FPS;
         FlxG.updateFramerate = l.FPS;
     }
+    override function destroy() {
+        super.destroy();
+        App.listApplications.remove("settings");
+    }
 }

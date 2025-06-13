@@ -23,6 +23,7 @@ class App extends FlxGroup
             var item = createNewItem((num * 50) + 50, isWindowsState == true ? WindowsState.taskBar.mainpart.y : 2000,i);
             add(item);
         }
+
     }
     function createNewItem(x:Float,y:Float,name:String)
     {
