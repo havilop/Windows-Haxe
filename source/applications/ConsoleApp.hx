@@ -4,6 +4,7 @@ import flixel.group.FlxGroup;
 import haxe.Json;
 import sys.io.File;
 import sys.FileSystem;
+import Std;
 import flixel.FlxState;
 import flixel.FlxG;
 import flixel.addons.ui.FlxInputText;
@@ -106,14 +107,11 @@ class ConsoleApp extends App
                     stopFunction();
                 case "exit":
                      exit();
-                case "settings.exe":
-                    WindowsState.IsSystem = true;
-                    stopFunction();
-                case "logon.exe":
+                case "logon":
                     var logon = new Logon();
                     add(logon);
                     stopFunction();
-                 case "taskbar.exe":
+                 case "taskbar":
                     stopFunction();
                    WindowsState.IsReset = true;
                 case "shutdown /off":
@@ -131,15 +129,15 @@ class ConsoleApp extends App
                     stopFunction();
                     logToConsole("shutdown /off");
                     logToConsole("shutdown /restart");
-                case "explorer.exe":
+                case "explorer":
                     stopFunction();
                     logToConsole("Success!");
                 case "apps":
                     stopFunction();
-                    logToConsole("settings.exe");
-                    logToConsole("logon.exe");
-                     logToConsole("taskbar.exe");
-                     logToConsole("explorer.exe");
+                    for (apps in App.Apps)
+                {
+                    logToConsole(apps);
+                }
                 case "random":
                 consoleOutput.text = "";
                 logToConsole("Type stop to exit random words");
@@ -163,7 +161,15 @@ class ConsoleApp extends App
                 default: 
                      logToConsole('Error invalid command $text');
             }
-            
+                for (apps in App.Apps)
+                {
+                    if (text == apps)
+                    {
+                        logToConsole('Success! the app $apps is open');
+                        WindowsState.openApp(apps);
+                        trace("Function Called");
+                    }
+                }
         if (IsRandom == true)
         {
              var max = listWords.length - 1;

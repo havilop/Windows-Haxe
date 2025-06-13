@@ -1,4 +1,5 @@
 package states;
+import flixel.FlxBasic;
 import Logon.Logon;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -39,7 +40,16 @@ class WindowsState extends FlxState
     static public var isConsole:Bool;
     static public var IsReset:Bool;
     static public var IsSystem:Bool;
+    static public var currentApp:String;
 
+    public static function openApp(name:String)
+    {
+        currentApp = name;
+        trace(currentApp);
+        Timer.delay(function main() {
+            currentApp = '';
+        },100);
+    }
     public function ResetTaskBar() 
     {
         taskBar.kill();
@@ -150,6 +160,16 @@ is = true;
                 }, 1);
             }
             taskBar.visible = true;
+        }
+        switch (currentApp)
+        {
+            case "cmd":
+            var cmd = new ConsoleApp();
+            add(cmd);
+            case "settings":
+            var settings = new SettingsApplication();
+            settings.currentSection = "system";
+            add(settings);
         }
     }
 }

@@ -6,6 +6,7 @@ import flixel.group.FlxGroup;
 class App extends FlxGroup
 {
     public static var listApplications:Array<String> = [];
+    public static var Apps:Array<String> = ["cmd","settings"];
     public var nameApp:String = '';
     public static var isWindowsState:Bool = false;
     var items:FlxTypedGroup<FlxButton>;
