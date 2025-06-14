@@ -171,7 +171,7 @@ is = true;
             var settings = new SettingsApplication();
             settings.currentSection = "system";
             add(settings);
-            case "calculator":
+            case "calc":
             var calc = new Calculator();
             add(calc);
         }
