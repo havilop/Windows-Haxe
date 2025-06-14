@@ -50,7 +50,7 @@ class ConsoleApp extends App
     {
         super();
         super.taskbar("console");
-        window = new ModernWindow(900,"Console","assets/images/icons/null.png",function appear() 
+        window = new ModernWindow(900,"Console","assets/images/icons/console.png",function appear() 
         {
 
         bg = new FlxSprite(0,0,"assets/images/setup/bg.png");

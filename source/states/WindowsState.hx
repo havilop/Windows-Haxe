@@ -1,4 +1,5 @@
 package states;
+import applications.Calculator;
 import flixel.FlxBasic;
 import Logon.Logon;
 import flixel.FlxG;
@@ -48,7 +49,7 @@ class WindowsState extends FlxState
         trace(currentApp);
         Timer.delay(function main() {
             currentApp = '';
-        },100);
+        },50);
     }
     public function ResetTaskBar() 
     {
@@ -170,6 +171,9 @@ is = true;
             var settings = new SettingsApplication();
             settings.currentSection = "system";
             add(settings);
+            case "calculator":
+            var calc = new Calculator();
+            add(calc);
         }
     }
 }

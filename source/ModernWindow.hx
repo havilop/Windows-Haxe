@@ -33,11 +33,13 @@ class ModernWindow extends FlxSprite
         super.updateHitbox();
         
         // Создаем текстовое поле для заголовка
-        titleText = new FlxText(this.x + 30, this.y - 3, this.width - 40, title);
+        titleText = new FlxText(this.x + 35, this.y + 15, this.width - 40, title);
         titleText.setFormat(null, 16, FlxColor.WHITE, LEFT);
         titleText.font = "assets/fonts/my.ttf";
      
-        iconWindow = new FlxSprite(this.x, this.y,icon);
+        iconWindow = new FlxSprite(this.x - 10, this.y + 5,icon);
+        iconWindow.setGraphicSize(30,30);
+        iconWindow.updateHitbox();
     
         exitWindow = new FlxButton(this.x + this.width - 30,this.y,"", DefaultExit);
         exitWindow.label.setFormat(null, 16, FlxColor.WHITE);
@@ -105,7 +107,7 @@ class ModernWindow extends FlxSprite
                 minusWindow.y = this.y;
 
                 titleText.x = this.x + 30;
-                titleText.y = this.y;
+                titleText.y = this.y + 4;
 
                 iconWindow.x = this.x;
                 iconWindow.y = this.y;

@@ -1,3 +1,4 @@
+import flixel.FlxSprite;
 import flixel.ui.FlxButton;
 import flixel.text.FlxText;
 import states.WindowsState;
@@ -6,11 +7,11 @@ import flixel.group.FlxGroup;
 class App extends FlxGroup
 {
     public static var listApplications:Array<String> = [];
-    public static var Apps:Array<String> = ["cmd","settings"];
+    public static var Apps:Array<String> = ["cmd","settings","calculator"];
     public var nameApp:String = '';
     public static var isWindowsState:Bool = false;
     var items:FlxTypedGroup<FlxButton>;
-    public function taskbar(name:String) 
+    public function taskbar(name:String)
     {
         listApplications.push(name);
         nameApp = name;
@@ -23,6 +24,10 @@ class App extends FlxGroup
         {
             var item = createNewItem((num * 50) + 50, isWindowsState == true ? WindowsState.taskBar.mainpart.y : 2000,i);
             add(item);
+            
+            var up:FlxSprite = new FlxSprite((num * 50) + 50,isWindowsState == true ? WindowsState.taskBar.mainpart.y : 2000,'assets/images/icons/app.png');
+            up.updateHitbox();
+            add(up);
         }
 
     }
