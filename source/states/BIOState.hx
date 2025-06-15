@@ -1,5 +1,7 @@
 package states;
 
+import flixel.util.FlxColor;
+import flixel.group.FlxGroup;
 import flixel.FlxSprite;
 import flixel.FlxBasic;
 import flixel.ui.FlxButton;
@@ -29,9 +31,13 @@ class BIOState extends FlxState
     var IsBootReady:Bool;
     var TimeDelay:Int;
     var bg:FlxSprite;
-    var itemsBios:FlxTypedGroup<FlxButton>;
-    var itemsBiosName:Array<String> = ["autombr","fastbios"];
     var IsBios:Bool = false;
+    var itemsBios:FlxGroup;
+    var autombr:FlxButton;
+    var bool:FlxText;
+    var desc:FlxText;
+    var fastboot:FlxButton;
+    var isFirst:Bool = false;
 
     function AddStartUI() 
     {
@@ -45,41 +51,52 @@ class BIOState extends FlxState
     }
     function AddBIOSUI() 
     {
-        for (num => items in itemsBiosName)
-        {
-            trace(num);
-            var item:FlxButton = createBiosItem(items,0,(num * 135) + 250,function name() {
-                if (num == 0) 
-                {
-                    var first = false;
+        autombr = new FlxButton(0,0,'AutoBoot',function name() {
 
-                    if (first == false) 
-                    {
-                    var com = new CommandFunction("/autombr true");
-                    add(com);
-                    Timer.delay(function name() {
-                        first = true;
-                    },50);
-                    }
-                    if (first == true)
-                    {
-                    var com = new CommandFunction("/autombr false");
-                    add(com);
-                    first = false;
-                    }
-                }
-                if (num == 1)
-                {
-                    trace("1");
-                }
-            });
-        }
-    }
-    function createBiosItem(name:String,x:Float,y:Float,?void:Null<()-> Void>) 
-    {
-        var itemBios:FlxButton = new FlxButton(x,y,name,void);
-        itemsBios.add(itemBios);
-        return itemBios;
+            if (o.autoMBR == false)
+            {
+                Timer.delay(function name() {
+                o.autoMBR = true;
+                File.saveContent("assets/data/settings.json", Json.stringify(o, null,""));
+                },50);
+            }
+            if (o.autoMBR == true)
+            {
+                Timer.delay(function name() {
+                o.autoMBR = false;
+                File.saveContent("assets/data/settings.json", Json.stringify(o, null,""));
+                },50);
+            }
+        });
+        autombr.makeGraphic(200,50,FlxColor.TRANSPARENT);
+        autombr.label.setFormat(null,35,FlxColor.WHITE,CENTER);
+        itemsBios.add(autombr);
+
+        fastboot = new FlxButton(0,65,'FastBoot',function name() {
+
+            if (o.fastBIOS == false)
+            {
+                Timer.delay(function name() {
+                o.fastBIOS = true;
+                File.saveContent("assets/data/settings.json", Json.stringify(o, null,""));
+                },50);            }
+            if (o.fastBIOS == true)
+            {
+                Timer.delay(function name() {
+                o.fastBIOS = false;
+                File.saveContent("assets/data/settings.json", Json.stringify(o, null,""));
+                },50);
+            }
+        });
+        fastboot.makeGraphic(200,50,FlxColor.TRANSPARENT);
+        fastboot.label.setFormat(null,35,FlxColor.WHITE,CENTER);
+        itemsBios.add(fastboot);
+
+        bool = new FlxText(0,FlxG.height - 50,0,'',40);
+        itemsBios.add(bool);
+
+        desc = new FlxText(0,FlxG.height - 150,0,'',35);
+        itemsBios.add(desc);
     }
     override function create() 
     {
@@ -89,7 +106,7 @@ class BIOState extends FlxState
         FlxG.sound.muteKeys = null;
         FlxG.sound.volumeUpKeys = null;
         Lib.application.window.title = "Windows 10"; 
-        FlxG.mouse.visible = false;
+        FlxG.mouse.visible = false;        
         FlxG.autoPause = false;
 
         AddStartUI();
@@ -100,11 +117,11 @@ class BIOState extends FlxState
         bg.color = 0x0400ff;
         bg.visible = false;
         add(bg);
-
-        itemsBios = new FlxTypedGroup<FlxButton>();
+        
+        itemsBios = new FlxGroup();
         itemsBios.visible = false;
 		add(itemsBios);
-
+        
         AddBIOSUI();
 
         if (FileSystem.exists("assets/data/settings.json")) 
@@ -147,7 +164,7 @@ class BIOState extends FlxState
 
         if (FlxG.keys.justPressed.ESCAPE && IsBios == false)
         {
-            if (o.console == true)
+           if (o.console == true)
             {
                 LoadState.setLoadingScreen(1,Console.new);
             }
@@ -162,10 +179,23 @@ class BIOState extends FlxState
         }
         if (IsBios == true)
         {
-            itemsBios.visible = true;
+
             FlxG.mouse.visible = true;
+            itemsBios.visible = true;
             bg.visible = true;
 
+            if (FlxG.mouse.overlaps(autombr))
+            {
+                var o = o.autoMBR + "";
+                bool.text = o;
+                desc.text = "auto loading boot after 2 seconds";
+            }
+            if (FlxG.mouse.overlaps(fastboot))
+            {
+                var o = o.fastBIOS + "";
+                bool.text = o;
+                desc.text = "if true then boot loading 1 second";
+            }
             if (FlxG.keys.justReleased.ESCAPE)
             {
                 IsBios = false;
@@ -173,9 +203,8 @@ class BIOState extends FlxState
         }
         if (IsBios == false)
         {
-             itemsBios.visible = false;
             FlxG.mouse.visible = false;
             bg.visible = false;
+            itemsBios.visible = false;
         }
-    }
-}
+    }}

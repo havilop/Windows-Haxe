@@ -1,4 +1,5 @@
 package states;
+import flixel.text.FlxText;
 import applications.Calculator;
 import flixel.FlxBasic;
 import Logon.Logon;
@@ -81,6 +82,10 @@ class WindowsState extends FlxState
         bg.updateHitbox();
         bg.screenCenter(X);
         add(bg);
+
+        var text = new FlxText(FlxG.width - 185,FlxG.height - 65,0,'press F10 to open console',16);
+        text.font = 'assets/fonts/my.ttf';
+        add(text);
 
         menu = new FlxSprite(0,0,"assets/images/menu.png");
         menu.visible = false;

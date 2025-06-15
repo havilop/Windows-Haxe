@@ -48,6 +48,7 @@ class TaskBar extends FlxGroup
     var windowEXIT:CustomWindow;
     var menuextraSETTINGS:FlxButton;
     var menuextraOFF:FlxButton;
+    var appsMenu:FlxTypedGroup<FlxButton>;
 
     public function updateTaskBarMembers() 
     {
