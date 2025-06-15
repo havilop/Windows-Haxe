@@ -1,0 +1,10 @@
+{
+"stepTwo": false,
+"isWindowsInstalled": true,
+"allow": false,
+"autoMBR": true,
+"stepOne": false,
+"fastBIOS": true,
+"OOBE": false,
+"console": false
+}

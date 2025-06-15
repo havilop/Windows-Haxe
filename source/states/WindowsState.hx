@@ -47,10 +47,6 @@ class WindowsState extends FlxState
     public static function openApp(name:String)
     {
         currentApp = name;
-        trace(currentApp);
-        Timer.delay(function main() {
-            currentApp = '';
-        },50);
     }
     public function ResetTaskBar() 
     {
@@ -172,13 +168,16 @@ is = true;
             case "cmd":
             var cmd = new ConsoleApp();
             add(cmd);
+            currentApp = '';
             case "settings":
             var settings = new SettingsApplication();
             settings.currentSection = "system";
             add(settings);
+            currentApp = '';
             case "calc":
             var calc = new Calculator();
             add(calc);
+            currentApp = '';
         }
     }
 }
