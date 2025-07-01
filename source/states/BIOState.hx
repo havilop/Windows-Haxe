@@ -33,8 +33,10 @@ class BIOState extends FlxState
     var bg:FlxSprite;
     var IsBios:Bool = false;
     var itemsBios:FlxGroup;
+    var version = '0.0.1.01.07.2025';
     var autombr:FlxButton;
     var bool:FlxText;
+    var installWindows:FlxButton;
     var desc:FlxText;
     var fastboot:FlxButton;
     var isFirst:Bool = false;
@@ -51,7 +53,7 @@ class BIOState extends FlxState
     }
     function AddBIOSUI() 
     {
-        autombr = new FlxButton(0,0,'AutoBoot',function name() {
+        autombr = new FlxButton(185,80,'AutoBoot',function name() {
 
             if (o.autoMBR == false)
             {
@@ -69,10 +71,10 @@ class BIOState extends FlxState
             }
         });
         autombr.makeGraphic(200,50,FlxColor.TRANSPARENT);
-        autombr.label.setFormat(null,35,FlxColor.WHITE,CENTER);
+        autombr.label.setFormat(BackendAssets.my,35,FlxColor.WHITE,CENTER);
         itemsBios.add(autombr);
 
-        fastboot = new FlxButton(0,65,'FastBoot',function name() {
+        fastboot = new FlxButton(185,155,'FastBoot',function name() {
 
             if (o.fastBIOS == false)
             {
@@ -89,14 +91,25 @@ class BIOState extends FlxState
             }
         });
         fastboot.makeGraphic(200,50,FlxColor.TRANSPARENT);
-        fastboot.label.setFormat(null,35,FlxColor.WHITE,CENTER);
+        fastboot.label.setFormat(BackendAssets.my,35,FlxColor.WHITE,CENTER);
         itemsBios.add(fastboot);
 
-        bool = new FlxText(0,FlxG.height - 50,0,'',40);
+        installWindows = new FlxButton(185,225,'Install Windows',function name() { o.isWindowsInstalled = false; File.saveContent("assets/data/settings.json", Json.stringify(o, null,"")); LoadState.setLoadingScreen(1000,SetupState.new);});
+        installWindows.makeGraphic(200,50,FlxColor.TRANSPARENT);
+        installWindows.label.setFormat(BackendAssets.my,35,FlxColor.WHITE,CENTER);
+        itemsBios.add(installWindows);
+
+        bool = new FlxText(185,FlxG.height - 200,0,'',40);
+        bool.font = BackendAssets.my;
         itemsBios.add(bool);
 
-        desc = new FlxText(0,FlxG.height - 150,0,'',35);
+        desc = new FlxText(185,FlxG.height - 325,0,'',35);
+        desc.font = BackendAssets.my;
         itemsBios.add(desc);
+
+        var windowsHaxeText = new FlxText(100,0,0,'Windows Haxe UEFI\nVERSION $version',28);
+        windowsHaxeText.font = BackendAssets.my;
+        itemsBios.add(windowsHaxeText);
     }
     override function create() 
     {
@@ -111,10 +124,9 @@ class BIOState extends FlxState
 
         AddStartUI();
 
-        bg = new FlxSprite(0,0,"assets/images/setup/bg.png");
+        bg = new FlxSprite(0,0,"assets/images/uefi/uefi.png");
         bg.screenCenter(XY);
         bg.setGraphicSize(FlxG.width,FlxG.height);
-        bg.color = 0x0400ff;
         bg.visible = false;
         add(bg);
         

@@ -24,6 +24,7 @@ import states.WindowsState;
 typedef TaskBarSettings = 
 {
 var taskbar:String;
+var curLanguage:String;
 }
 
 class TaskBar extends FlxGroup
@@ -82,58 +83,15 @@ class TaskBar extends FlxGroup
             menuextraOFF.visible = false;
             menuextraSETTINGS.visible = false;
             swithcFirstTimed = false;
+            restart.visible = false;
+            off.visible = false;
             }
         }
         function appearOFF() 
         {
-            windowEXIT.visible = true;
-            bgturnoff.visible = true;
-            off.visible = true;
             restart.visible = true;
+            off.visible = true;
         }
-        windowEXIT = new CustomWindow(536,277,"Turn off PC","assets/images/icons/null.png",function name()
-        {
-            bgturnoff = new FlxSprite(0,0,"assets/images/turnoff.png");
-            bgturnoff.visible = false;
-            bgturnoff.screenCenter(XY);
-            add(bgturnoff);
-
-            off = new FlxButton(0,0,"",function name() {
-                var off = new CommandFunction("shutdown /off");
-                add(off);
-            });
-            off.screenCenter(XY);
-            off.x -= 150;
-            off.y -= 25;
-            off.visible = false;
-            off.loadGraphic("assets/images/off.png");
-            off.setGraphicSize(150,150);
-            off.updateHitbox();
-            add(off);
-
-             restart = new FlxButton(0,0,"",function name() {
-                LoadState.setLoadingScreen(2000,BIOState.new);
-            });
-            restart.screenCenter(XY);
-            restart.x += 100;
-            restart.y -= 25;
-            restart.visible = false;
-            restart.loadGraphic("assets/images/restart.png");
-            restart.setGraphicSize(150,150);
-            restart.updateHitbox();
-            add(restart);
-        }, 
-        function name() 
-        {
-            bgturnoff.visible = false;
-            windowEXIT.visible = false;
-            off.visible = false;
-            restart.visible = false;
-        }
-        ,false);
-        windowEXIT.screenCenter(XY);
-        windowEXIT.visible = false;
-        add(windowEXIT);
 
         menu = new FlxSprite(0,0,"assets/images/menu.png");
         menu.y = o.taskbar == "down" ? FlxG.height - 768 : o.taskbar == "up" ? 40 : 40;
@@ -167,6 +125,29 @@ class TaskBar extends FlxGroup
         menuextraSETTINGS.y = o.taskbar == "down" ? FlxG.height - 133 : o.taskbar == "up" ? 670 : 670;
         menuextraSETTINGS.visible = false;
         add(menuextraSETTINGS);
+
+        restart = new FlxButton(0,0,"",function name(){LoadState.setLoadingScreen(500,BIOState.new);});
+        restart.loadGraphic("assets/images/taskbar/restart.png");
+        restart.updateHitbox();
+        restart.text = o.curLanguage == "en" ? "Restart" : "Перезагрузка";
+        restart.label.setFormat(o.curLanguage == "en" ? "assets/fonts/my.ttf" : "assets/fonts/ots.ttf", 16,FlxColor.WHITE,CENTER);
+        restart.updateHitbox();
+        restart.y = o.taskbar == "down" ? FlxG.height - 125 : o.taskbar == "up" ? 719 : 719;
+        restart.x = 300;
+        restart.visible = false;
+        add(restart);
+
+        
+        off = new FlxButton(0,0,"",function name() {Sys.exit(0);});
+        off.loadGraphic("assets/images/taskbar/off.png");
+        off.updateHitbox();
+        off.text = o.curLanguage == "en" ? "Turn Off" : "Завершение работы";
+        off.label.setFormat(o.curLanguage == "en" ? "assets/fonts/my.ttf" : "assets/fonts/ots.ttf", 16,FlxColor.WHITE,CENTER);
+        off.updateHitbox();
+        off.y = o.taskbar == "down" ? FlxG.height - 167 : o.taskbar == "up" ? 676 : 676;
+        off.x = 300;
+        off.visible = false;
+        add(off);
 
         timeText = new FlxText(0, 10, 0, "", 12);
         timeText.font = "assets/fonts/my.ttf";
