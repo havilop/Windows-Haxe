@@ -165,7 +165,7 @@ is = true;
         }
         switch (currentApp)
         {
-            case "cmd":
+            case "console":
             var cmd = new ConsoleApp();
             add(cmd);
             currentApp = '';

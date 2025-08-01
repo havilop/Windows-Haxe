@@ -158,6 +158,9 @@ class ConsoleApp extends App
                 case "/fastBIOS false":
                 o.fastBIOS = false;
                 File.saveContent("assets/data/settings.json", Json.stringify(o, null,""));
+                case "test":
+                var test = new CommandFunction("settings");
+                add(test);
                 default: 
                      logToConsole('Error invalid command $text');
             }

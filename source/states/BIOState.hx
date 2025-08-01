@@ -53,7 +53,7 @@ class BIOState extends FlxState
     }
     function AddBIOSUI() 
     {
-        autombr = new FlxButton(185,80,'AutoBoot',function name() {
+        autombr = new FlxButton(85,95,'AutoBoot',function name() {
 
             if (o.autoMBR == false)
             {
@@ -74,7 +74,7 @@ class BIOState extends FlxState
         autombr.label.setFormat(BackendAssets.my,35,FlxColor.WHITE,CENTER);
         itemsBios.add(autombr);
 
-        fastboot = new FlxButton(185,155,'FastBoot',function name() {
+        fastboot = new FlxButton(85,165,'FastBoot',function name() {
 
             if (o.fastBIOS == false)
             {
@@ -94,16 +94,16 @@ class BIOState extends FlxState
         fastboot.label.setFormat(BackendAssets.my,35,FlxColor.WHITE,CENTER);
         itemsBios.add(fastboot);
 
-        installWindows = new FlxButton(185,225,'Install Windows',function name() { o.isWindowsInstalled = false; File.saveContent("assets/data/settings.json", Json.stringify(o, null,"")); LoadState.setLoadingScreen(1000,SetupState.new);});
+        installWindows = new FlxButton(85,235,'Install Windows',function name() { o.isWindowsInstalled = false; File.saveContent("assets/data/settings.json", Json.stringify(o, null,"")); LoadState.setLoadingScreen(1000,SetupState.new);});
         installWindows.makeGraphic(200,50,FlxColor.TRANSPARENT);
         installWindows.label.setFormat(BackendAssets.my,35,FlxColor.WHITE,CENTER);
         itemsBios.add(installWindows);
 
-        bool = new FlxText(185,FlxG.height - 200,0,'',40);
+        bool = new FlxText(90,FlxG.height - 100,0,'',40);
         bool.font = BackendAssets.my;
         itemsBios.add(bool);
 
-        desc = new FlxText(185,FlxG.height - 325,0,'',35);
+        desc = new FlxText(90,FlxG.height - 165,0,'',35);
         desc.font = BackendAssets.my;
         itemsBios.add(desc);
 

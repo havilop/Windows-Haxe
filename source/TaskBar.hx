@@ -1,3 +1,4 @@
+
 import haxe.Log;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -49,7 +50,7 @@ class TaskBar extends FlxGroup
     var windowEXIT:CustomWindow;
     var menuextraSETTINGS:FlxButton;
     var menuextraOFF:FlxButton;
-    var appsMenu:FlxTypedGroup<FlxButton>;
+    var appsMenu:FlxGroup;
 
     public function updateTaskBarMembers() 
     {
@@ -73,6 +74,11 @@ class TaskBar extends FlxGroup
             menu.visible = true;
             menuextraOFF.visible = true;
             menuextraSETTINGS.visible = true;
+            appsMenu.visible = true;
+            for (i in appsMenu)
+            {
+                i.visible = true;
+            }
             Timer.delay(function name() {
                        swithcFirstTimed = true;
             },100);
@@ -85,6 +91,11 @@ class TaskBar extends FlxGroup
             swithcFirstTimed = false;
             restart.visible = false;
             off.visible = false;
+            appsMenu.visible = false;
+               for (i in appsMenu)
+            {
+                i.visible = false;
+            }
             }
         }
         function appearOFF() 
@@ -97,7 +108,6 @@ class TaskBar extends FlxGroup
         menu.y = o.taskbar == "down" ? FlxG.height - 768 : o.taskbar == "up" ? 40 : 40;
         menu.visible = false;
         add(menu);
-
         
         mainpart = new FlxSprite(0,0,"assets/images/taskbar.png");
         mainpart.screenCenter(X);
@@ -148,6 +158,24 @@ class TaskBar extends FlxGroup
         off.x = 300;
         off.visible = false;
         add(off);
+
+        appsMenu = new FlxGroup();
+        appsMenu.visible = false;
+		add(appsMenu);
+
+        for (num => i in App.Apps)
+        {
+            trace(i);
+            var item = new FlxButton(50, (num * 40) + (o.taskbar == "up" ? 40 : o.taskbar == "down" ? 315 :315) , i,function name() { WindowsState.openApp(i);  swithcFirstTimed = true;appear();});
+            item.makeGraphic(285,40,0x302F2F);
+            item.label.setFormat(BackendAssets.my,16,FlxColor.WHITE,CENTER);
+            item.updateHitbox();
+            var img = new FlxSprite(50,(num * 40) + (o.taskbar == "up" ? 40 : o.taskbar == "down" ? 315 :315),'assets/images/icons/$i.png');
+            img.setGraphicSize(40,40);
+            img.updateHitbox();
+            appsMenu.add(item);
+            appsMenu.add(img);
+        }
 
         timeText = new FlxText(0, 10, 0, "", 12);
         timeText.font = "assets/fonts/my.ttf";
