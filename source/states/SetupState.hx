@@ -229,7 +229,7 @@ if (FileSystem.exists("assets/data/settings.json"))
 					}	
 			
 					// Создаём или перезаписываем файл mbr.json
-					var content = "{ \"bootloader\": \"MBR\", \"curLanguage\": \"en\", \"wallpaper\": \"assets/images/wallpapers/wallpaper.png\", \"FPS\": 60}"; // Содержимое JSON
+					var content = "{ \"bootloader\": \"MBR\", \"curLanguage\": \"en\", \"wallpaper\": \"assets/images/wallpapers/wallpaper.png\", \"FPS\": 60, \"icon\": \"assets/images/user/default.png\", \"autologin\": false }"; // Содержимое JSON
 					File.saveContent(filePath, content);
 					trace('file: $filePath');
 					

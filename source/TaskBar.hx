@@ -166,9 +166,10 @@ class TaskBar extends FlxGroup
         for (num => i in App.Apps)
         {
             trace(i);
-            var item = new FlxButton(50, (num * 40) + (o.taskbar == "up" ? 40 : o.taskbar == "down" ? 315 :315) , i,function name() { WindowsState.openApp(i);  swithcFirstTimed = true;appear();});
-            item.makeGraphic(285,40,0x302F2F);
-            item.label.setFormat(BackendAssets.my,16,FlxColor.WHITE,CENTER);
+            var item = new FlxButton(90, (num * 40) + (o.taskbar == "up" ? 40 : o.taskbar == "down" ? 315 :315) , i,function name() { WindowsState.openApp(i);  swithcFirstTimed = true;appear();});
+            item.makeGraphic(220,40,FlxColor.TRANSPARENT);
+            item.label.setFormat(BackendAssets.my,16,FlxColor.WHITE,LEFT);
+            item.text = item.text == "console" ? "console" : item.text == "calc" ? "calculator" : i;
             item.updateHitbox();
             var img = new FlxSprite(50,(num * 40) + (o.taskbar == "up" ? 40 : o.taskbar == "down" ? 315 :315),'assets/images/icons/$i.png');
             img.setGraphicSize(40,40);

@@ -13,6 +13,8 @@ typedef MbrSettings = {
     var userName:String;
     var password:String;
     var curLanguage:String;
+    var icon:String;
+    var autologin:Bool;
 } 
 
 class Logon extends FlxGroup
@@ -25,6 +27,7 @@ class Logon extends FlxGroup
     private var userNameText:FlxText;
     private var o:MbrSettings;
     private var is:Bool;
+    var allow:Bool;
     var isVision:Bool = true;
     private var Next:FlxButton;
     private var timeText:FlxText;
@@ -55,12 +58,23 @@ class Logon extends FlxGroup
                                 o = Json.parse(dat);
                             }
                         }
-
+        if (o.password == "") {
+            allow = true;
+        }
+        if (o.autologin == true)
+        {
+            if (allow == true)
+            {
+                logon = false;
+                this.kill();
+            }
+        }
         bg = new FlxSprite(0,0,"assets/images/wallpaperdark.png");
         bg.screenCenter(X);
         add(bg);
 
-        user = new FlxSprite(0,0,"assets/images/user.png");
+        user = new FlxSprite(0,0,o.icon);
+        user.setGraphicSize(200,200);
         user.screenCenter(XY);
         user.y -= 100;
         add(user);

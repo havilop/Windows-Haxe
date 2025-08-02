@@ -1,5 +1,6 @@
 package applications;
 
+import haxe.Timer;
 import flixel.FlxG;
 import flixel.FlxGame;
 import flixel.FlxSprite;
@@ -24,6 +25,9 @@ typedef Setmbr = {
     var FPS:Int;
     var wallpaper:String;
     var taskbar:String;
+    var icon:String;
+    var userName:String;
+    var autologin:Bool;
 } 
 
 class SettingsApplication extends App
@@ -32,6 +36,7 @@ class SettingsApplication extends App
     var bg:FlxSprite;
     var systemSection:FlxButton;
     var personalizationSection:FlxButton;
+    var useraccountSection:FlxButton;
     var textPesonalizationWallpaper:FlxText;
     var wallpaperCURRENT:FlxSprite;
     var textWallpaperCurent:FlxText;
@@ -57,7 +62,14 @@ class SettingsApplication extends App
     var textDisplayFPSCUR:FlxText;
     var displayBUTTONMINUS:FlxButton;
     var displayBUTTONPLUS:FlxButton;
-
+    var itemsUserAccount:FlxGroup;
+    var iconUser:FlxSprite;
+    var textUser:FlxText;
+    var buttonChangeName:FlxButton;
+    var buttonChangePassword:FlxButton;
+    var buttonChangeIcon:FlxButton;
+    var textAutoLogin:FlxText;
+    var buttonAutoLogin:FlxButton;
 
     
     
@@ -90,6 +102,15 @@ class SettingsApplication extends App
         personalizationSection.label.setFormat(l.curLanguage == "en" ? "assets/fonts/my.ttf" : "assets/fonts/ots.ttf", 26, 0x000000, CENTER);
         personalizationSection.text = l.curLanguage == "en" ? "Personalization" : "Персонализация";
         add(personalizationSection);
+
+        useraccountSection = new FlxButton(0,0,"",function name() {
+            currentSection = "useraccount";
+        });
+        useraccountSection.loadGraphic("assets/images/settings/useraccount.png");
+        useraccountSection.updateHitbox();
+        useraccountSection.label.setFormat(l.curLanguage == "en" ? "assets/fonts/my.ttf" : "assets/fonts/ots.ttf", 26, 0x000000, CENTER);
+        useraccountSection.text = l.curLanguage == "en" ? "User Account" : "Учетная запись";
+        add(useraccountSection);
 
         textPesonalizationWallpaper = new FlxText(0,0,0,"",38);
         textPesonalizationWallpaper.color = 0x35599C;
@@ -273,6 +294,67 @@ var cur = l.wallpaper;
         displayBUTTONPLUS.updateHitbox();
         add(displayBUTTONPLUS);
 
+        itemsUserAccount = new FlxGroup();
+        itemsUserAccount.visible = false;
+        add(itemsUserAccount);
+
+        iconUser = new FlxSprite(0,0,l.icon);
+        iconUser.setGraphicSize(200,200);
+        iconUser.updateHitbox();
+        itemsUserAccount.add(iconUser);
+
+        textUser = new FlxText(0,0,0,l.userName,40);
+        textUser.color = FlxColor.BLACK;
+        textUser.font = l.curLanguage == "en" ? BackendAssets.my : l.curLanguage == "ru" ? BackendAssets.ru : BackendAssets.ru;
+        itemsUserAccount.add(textUser);
+
+        buttonChangeName = new FlxButton(0,0,l.curLanguage == "en" ? "Change name" : "Изменить имя",function name() {
+            
+        });
+        buttonChangeName.label.setFormat(l.curLanguage == "en" ? BackendAssets.my : BackendAssets.ru,25,0x35599C,LEFT);
+        buttonChangeName.makeGraphic(200,30,FlxColor.TRANSPARENT);
+        itemsUserAccount.add(buttonChangeName);
+
+        buttonChangePassword = new FlxButton(0,0,l.curLanguage == "en" ? "Change password" : "Изменить пароль",function name() {
+            
+        });
+        buttonChangePassword.label.setFormat(l.curLanguage == "en" ? BackendAssets.my : BackendAssets.ru,25,0x35599C,LEFT);
+        buttonChangePassword.makeGraphic(220,30,FlxColor.TRANSPARENT);
+        itemsUserAccount.add(buttonChangePassword);
+
+        buttonChangeIcon = new FlxButton(0,0,l.curLanguage == "en" ? "Change icon" : "Изменить иконку",function name() {
+            
+        });
+        buttonChangeIcon.label.setFormat(l.curLanguage == "en" ? BackendAssets.my : BackendAssets.ru,25,0x35599C,LEFT);
+        buttonChangeIcon.makeGraphic(220,30,FlxColor.TRANSPARENT);
+        itemsUserAccount.add(buttonChangeIcon);
+
+        textAutoLogin = new FlxText(0,0,0,l.curLanguage == "en" ? "Autologin :" : "Автологин :",25);
+        textAutoLogin.color = FlxColor.BLACK;
+        textAutoLogin.font = l.curLanguage == "en" ? BackendAssets.my : BackendAssets.ru;
+        itemsUserAccount.add(textAutoLogin);
+
+        buttonAutoLogin = new FlxButton(0,0,null,function name() {
+            if (l.autologin == true)
+            {
+                Timer.delay(function name() {
+                l.autologin = false;
+                File.saveContent("assets/Windows/mbr.json", Json.stringify(l, null,""));
+                 buttonAutoLogin.loadGraphic(l.autologin == false ? "assets/images/buttonoff.png" : l.autologin == true ? "assets/images/buttonon.png" : "assets/images/buttonon.png");
+                },50);
+            }
+             if (l.autologin == false)
+            {
+                Timer.delay(function name() {
+                l.autologin = true;
+                File.saveContent("assets/Windows/mbr.json", Json.stringify(l, null,""));
+                 buttonAutoLogin.loadGraphic(l.autologin == false ? "assets/images/buttonoff.png" : l.autologin == true ? "assets/images/buttonon.png" : "assets/images/buttonon.png");
+                },50);
+            }
+        });
+        buttonAutoLogin.loadGraphic(l.autologin == false ? "assets/images/buttonoff.png" : l.autologin == true ? "assets/images/buttonon.png" : "assets/images/buttonon.png");
+        buttonAutoLogin.updateHitbox();
+        itemsUserAccount.add(buttonAutoLogin);
     }
     public function plus() 
         {
@@ -320,28 +402,6 @@ var cur = l.wallpaper;
     {
         this.kill();
     }
-    public function UpdateUI() 
-    {
-     systemSection.revive();
-     personalizationSection.update(0.1);
-     textPesonalizationWallpaper.update(0.1);
-     wallpaperCURRENT.update(0.1);
-     textWallpaperCurent.update(0.1);
-     wal1.update(0.1);
-     wal2.update(0.1);
-     wal3.update(0.1);
-     wal4.update(0.1);
-     back.update(0.1);
-     textTaskBar.update(0.1);
-     textTaskBarChange.update(0.1);
-     up.update(0.1);
-     down.update(0.1);
-     textLanguage.update(0.1);
-     textLanguageCurrent.update(0.1);
-    textLanguageChoose.update(0.1);
-    textLanguageChooseRU.update(0.1);
-    textLanguageChooseEN.update(0.1);  
-    }
     public function new() 
     {
         super();
@@ -375,6 +435,7 @@ var cur = l.wallpaper;
             case "system":
                 systemSection.loadGraphic("assets/images/settings/systemCHOOSE.png");
                 personalizationSection.loadGraphic("assets/images/settings/personalization.png");
+                useraccountSection.loadGraphic("assets/images/settings/useraccount.png");
                 textPesonalizationWallpaper.visible = false;
                 wallpaperCURRENT.visible = false;
                 textWallpaperCurent.visible = false;
@@ -398,10 +459,15 @@ var cur = l.wallpaper;
                 displayBUTTONMINUS.visible = true;
                 var curff = l.FPS;
                 textDisplayFPSCUR.text = l.curLanguage == "en" ? '$curff' : '$curff';
+                itemsUserAccount.visible = false;
+                for (i in itemsUserAccount)
+                {
+                    i.visible = false;
+                }
 
             case "personalization":
                 systemSection.loadGraphic("assets/images/settings/system.png");
-
+                useraccountSection.loadGraphic("assets/images/settings/useraccount.png");
                 personalizationSection.loadGraphic("assets/images/settings/personalizationCHOOSE.png");
 
                 textPesonalizationWallpaper.visible = true;
@@ -437,6 +503,42 @@ var cur = l.wallpaper;
                 textDisplayFPSCUR.visible = false;
                  displayBUTTONPLUS.visible = false;
                 displayBUTTONMINUS.visible = false;
+                 itemsUserAccount.visible = false;
+                for (i in itemsUserAccount)
+                {
+                    i.visible = false;
+                }
+            case "useraccount":
+                useraccountSection.loadGraphic("assets/images/settings/useraccountChoose.png");
+                systemSection.loadGraphic("assets/images/settings/system.png");
+                personalizationSection.loadGraphic("assets/images/settings/personalization.png");
+
+                textPesonalizationWallpaper.visible = false;
+                wallpaperCURRENT.visible = false;
+                textWallpaperCurent.visible = false;
+                wal1.visible = false;
+                wal2.visible = false;
+                wal3.visible = false;
+                wal4.visible = false;
+                textTaskBar.visible = false;
+                textTaskBarChange.visible = false;
+                down.visible = false;
+                up.visible = false;
+                textLanguage.visible = false;
+                textLanguageCurrent.visible = false;
+                textLanguageChoose.visible = false;
+                textLanguageChooseEN.visible = false;
+                textLanguageChooseRU.visible = false;
+                textDisplay.visible = false;
+                textDisplayFPS.visible = false;
+                textDisplayFPSCUR.visible = false;
+                 displayBUTTONPLUS.visible = false;
+                displayBUTTONMINUS.visible = false;
+                itemsUserAccount.visible = true;
+                for (i in itemsUserAccount)
+                {
+                    i.visible = true;
+                }
         }
         bg.x = window.x;
         bg.y = window.y;
@@ -449,6 +551,9 @@ var cur = l.wallpaper;
 
         personalizationSection.x = window.x + 14;
         personalizationSection.y = window.y + 77;
+
+        useraccountSection.x = window.x + 14;
+        useraccountSection.y = window.y + 126;
 
         textLanguage.x = window.x + 350;
         textLanguage.y = window.y + 28;
@@ -516,6 +621,27 @@ var cur = l.wallpaper;
 
         FlxG.drawFramerate = l.FPS;
         FlxG.updateFramerate = l.FPS;
+
+        iconUser.x = window.x + 350;
+        iconUser.y = window.y + 30;
+
+        textUser.x = window.x + 565;
+        textUser.y = window.y + 30;
+
+        buttonChangeName.x = window.x + 565;
+        buttonChangeName.y = window.y + 70;
+
+        buttonChangePassword.x = window.x + 565;
+        buttonChangePassword.y = window.y + 105;
+
+        buttonChangeIcon.x = window.x + 565;
+        buttonChangeIcon.y = window.y + 140;
+
+        textAutoLogin.x = window.x + 350;
+        textAutoLogin.y = window.y + 250;
+
+        buttonAutoLogin.x = window.x + 500;
+        buttonAutoLogin.y = window.y + 250;
     }
     override function destroy() {
         super.destroy();
