@@ -21,6 +21,7 @@ typedef BiosSettings = {
       var isWindowsInstalled:Bool;
       var fastBIOS:Bool;
       var console:Bool;
+      var boot:String;
 } 
 
 class BIOState extends FlxState
@@ -33,23 +34,48 @@ class BIOState extends FlxState
     var bg:FlxSprite;
     var IsBios:Bool = false;
     var itemsBios:FlxGroup;
-    var version = '0.0.1.01.07.2025';
+    var version = '0.0.2.22.08.2025';
     var autombr:FlxButton;
     var bool:FlxText;
     var installWindows:FlxButton;
     var desc:FlxText;
     var fastboot:FlxButton;
     var isFirst:Bool = false;
+    var logo:FlxSprite;
+    var screenX:Int = FlxG.width;
+    var textChooseBoot:FlxText;
+    var buttonON:FlxButton;
+    var buttonSSD:FlxButton;
+    var buttonUSB:FlxButton;
+    var swFirst_buttonON:Bool = false;
+    var textONE:FlxText;
+    var textTWO:FlxText;
+    var textCurrentBoot:FlxText;
+
 
     function AddStartUI() 
     {
-        textMBR = new FlxText(10, FlxG.height - 135,0,"Press ESC to load MBR", 52);
+        textMBR = new FlxText(0, 0,0,"Press ESC to BOOT", screenX == 1400 ? 32 : 52);
         textMBR.setFormat(null, 52, 0xFFFFFF, "left");
+        textMBR.screenCenter(XY);
+        textMBR.x = screenX == 1400 ? FlxG.width - 400 : FlxG.width - 600;
+        textMBR.size = screenX == 1400 ? 32 : 52;
+        textMBR.y += 20;
         add(textMBR);
-
-        textBIOS = new FlxText(10, FlxG.height - 60, 0,"Press DEL to BIOS", 52);
+trace(screenX);
+        textBIOS = new FlxText(0, 0, 0,"Press DEL to BIOS", screenX == 1400 ? 32 : 52);
         textBIOS.setFormat(null, 52, 0xFFFFFF, "left");
+        textBIOS.screenCenter(XY);
+        textBIOS.x = screenX == 1400 ? FlxG.width - 400 : FlxG.width - 600;
+        textBIOS.y += 100;
+        textBIOS.size = screenX == 1400 ? 32 : 52;
         add(textBIOS);
+
+        logo = new FlxSprite(0,0,"assets/images/uefi/logo.png");
+        logo.screenCenter(XY);
+        logo.x -= 100;
+        logo.setGraphicSize(logo.width / 1.1,logo.height / 1.1);
+        add(logo);
     }
     function AddBIOSUI() 
     {
@@ -99,6 +125,62 @@ class BIOState extends FlxState
         installWindows.label.setFormat(BackendAssets.my,35,FlxColor.WHITE,CENTER);
         itemsBios.add(installWindows);
 
+        textChooseBoot = new FlxText(300,95,0,'Choose Boot Priority:',30);
+        textChooseBoot.color = FlxColor.WHITE;
+        textChooseBoot.font = BackendAssets.my;
+        itemsBios.add(textChooseBoot);
+
+        buttonON = new FlxButton(600,95,'',function name() {
+            if (swFirst_buttonON == false)
+            {
+                buttonON.loadGraphic("assets/images/uefi/buttonOFF.png");
+                Timer.delay(function name() {
+                    swFirst_buttonON = true;
+                },10);
+            }
+            if (swFirst_buttonON == true)
+            {
+                buttonON.loadGraphic("assets/images/uefi/buttonON.png");
+                  Timer.delay(function name() {
+                    swFirst_buttonON = false;
+                },10);
+            }
+        });
+        buttonON.loadGraphic("assets/images/uefi/buttonON.png");
+        buttonON.updateHitbox();
+        itemsBios.add(buttonON);
+
+        buttonSSD = new FlxButton( 320, 0,'SSD 126 GB',function name() {
+            o.boot = "ssd";
+            File.saveContent("assets/data/settings.json", Json.stringify(o, null,""));
+            swFirst_buttonON = false;
+        });
+        buttonSSD.label.setFormat(BackendAssets.my, 35,FlxColor.WHITE,CENTER);
+        buttonSSD.makeGraphic(200,50,FlxColor.TRANSPARENT);
+        itemsBios.add(buttonSSD);
+
+        buttonUSB = new FlxButton(320, 140,'USB 64 GB',function name() {
+            o.boot = "usb";
+            File.saveContent("assets/data/settings.json", Json.stringify(o, null,""));
+            swFirst_buttonON = false;
+        });
+        buttonUSB.label.setFormat(BackendAssets.my, 35,FlxColor.WHITE,CENTER);
+        buttonUSB.makeGraphic(200,50,FlxColor.TRANSPARENT);
+        itemsBios.add(buttonUSB);
+
+        textONE = new FlxText(300,145,0,"0",30);
+        textONE.font = BackendAssets.my;
+        itemsBios.add(textONE);
+
+        textCurrentBoot = new FlxText(335,145,0,"0",30);
+        textCurrentBoot.font = BackendAssets.my;
+        itemsBios.add(textCurrentBoot);
+
+        textTWO = new FlxText(300,190,0,"1",30);
+        textTWO.font = BackendAssets.my;
+        textTWO.visible = false;
+        itemsBios.add(textTWO);
+
         bool = new FlxText(90,FlxG.height - 100,0,'',40);
         bool.font = BackendAssets.my;
         itemsBios.add(bool);
@@ -132,6 +214,10 @@ class BIOState extends FlxState
         
         itemsBios = new FlxGroup();
         itemsBios.visible = false;
+          for ( i in itemsBios)
+            {
+                i.visible = false;
+            }
 		add(itemsBios);
         
         AddBIOSUI();
@@ -170,7 +256,16 @@ class BIOState extends FlxState
             }
             if (o.console == false)
             {
-                LoadState.setLoadingScreen(1,MBRstate.new);
+                if (o.boot == "ssd")
+                {
+                    LoadState.setLoadingScreen(1,MBRstate.new);
+                }
+                if (o.boot == "usb")
+                {
+                    o.isWindowsInstalled = false;
+                    File.saveContent("assets/data/settings.json", Json.stringify(o, null,""));
+                    LoadState.setLoadingScreen(1000,SetupState.new);
+                }
             }
         }
 
@@ -182,7 +277,16 @@ class BIOState extends FlxState
             }
             if (o.console == false)
             {
-                LoadState.setLoadingScreen(1,MBRstate.new);
+                 if (o.boot == "ssd")
+                {
+                    LoadState.setLoadingScreen(1,MBRstate.new);
+                }
+                if (o.boot == "usb")
+                {
+                    o.isWindowsInstalled = false;
+                    File.saveContent("assets/data/settings.json", Json.stringify(o, null,""));
+                    LoadState.setLoadingScreen(1000,SetupState.new);
+                }
             }
         }
         if (FlxG.keys.justPressed.DELETE)
@@ -196,6 +300,30 @@ class BIOState extends FlxState
             itemsBios.visible = true;
             bg.visible = true;
 
+            for ( i in itemsBios)
+            {
+                if (swFirst_buttonON == false)
+                {
+                    i.visible = true;
+                    buttonSSD.visible = false;
+                    buttonUSB.visible = false;
+                    textTWO.visible = false;
+                }
+                   if (swFirst_buttonON == true)
+                {
+                    i.visible = true;
+                    buttonSSD.visible = true;
+                    buttonUSB.visible = true;
+                    textTWO.visible = true;
+                    textCurrentBoot.visible = false;
+                }
+            }
+
+            textCurrentBoot.text = o.boot == "ssd" ? "SSD 126 GB" : o.boot == "usb" ? "USB 64 GB" : "USB 64 GB";
+            buttonSSD.y = o.boot == "ssd" ? 140 : o.boot == "usb" ? 185 : 185;
+            buttonUSB.y = o.boot == "ssd" ? 185 : o.boot == "usb" ? 140 : 140;
+
+            installWindows.visible = false;
             if (FlxG.mouse.overlaps(autombr))
             {
                 var o = o.autoMBR + "";

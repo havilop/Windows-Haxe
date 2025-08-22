@@ -129,9 +129,6 @@ class ConsoleApp extends App
                     stopFunction();
                     logToConsole("shutdown /off");
                     logToConsole("shutdown /restart");
-                case "explorer":
-                    stopFunction();
-                    logToConsole("Success!");
                 case "apps":
                     stopFunction();
                     for (apps in App.Apps)

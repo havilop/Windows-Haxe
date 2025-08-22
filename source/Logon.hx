@@ -31,17 +31,26 @@ class Logon extends FlxGroup
     var isVision:Bool = true;
     private var Next:FlxButton;
     private var timeText:FlxText;
+    var wrongPassword:FlxText;
 
     public function new() {
         super();
 
+        function name(s:String,s:String):Void {
+            wrongPassword.visible = false;
+        }
         function click() {
             if (is == true)
             {
                 if (o.password == inputPassword.text)
                 {
                     logon = false;
-             this.kill();
+                    this.kill();
+                }
+                if (o.password != inputPassword.text)
+                {
+                    wrongPassword.font = BackendAssets.my;
+                    wrongPassword.visible = true;
                 }
             }
             if (is == false) 
@@ -106,6 +115,7 @@ class Logon extends FlxGroup
                 inputPassword.font = "assets/fonts/my.ttf";
                 inputPassword.visible = true;
                 inputPassword.passwordMode = true;
+                inputPassword.callback = name;
                 inputPassword.screenCenter(XY);
                 inputPassword.y += 100;
                 add(inputPassword);
@@ -141,6 +151,12 @@ class Logon extends FlxGroup
             Next.y += 100;
             is = false;
         }
+        wrongPassword = new FlxText(0,0,0,'Wrong Password', 21);
+        wrongPassword.screenCenter(XY);
+        wrongPassword.y += 125;
+        wrongPassword.x += 40;
+        wrongPassword.visible = false;
+        add(wrongPassword);
         
 updateTime();
     }

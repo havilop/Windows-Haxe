@@ -251,7 +251,5 @@ if (FileSystem.exists("assets/Windows/mbr.json"))
     }
     override function destroy() {
         super.destroy(); // Важно вызывать родительский destroy!
-        FlxG.bitmap.clearCache();
-        FlxG.bitmap.dumpCache();
     }
 }

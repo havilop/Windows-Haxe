@@ -91,7 +91,7 @@ class Console extends FlxState
                  o.console = true;
                 File.saveContent("assets/data/settings.json", Json.stringify(o, null,""));
                 logToConsole("Succes!");
-                case "/install windows":
+                case "null":
                 o.isWindowsInstalled = false;
                 File.saveContent("assets/data/settings.json", Json.stringify(o, null,""));
                 LoadState.setLoadingScreen(1000,SetupState.new);

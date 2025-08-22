@@ -1,4 +1,6 @@
 package states;
+import applications.Notepad;
+import applications.Explorer;
 import flixel.text.FlxText;
 import applications.Calculator;
 import flixel.FlxBasic;
@@ -177,6 +179,14 @@ is = true;
             case "calc":
             var calc = new Calculator();
             add(calc);
+            currentApp = '';
+            case "explorer":
+            var explorer = new Explorer();
+            add(explorer);
+            currentApp = '';
+            case "notepad":
+            var notepad = new Notepad();
+            add(notepad);
             currentApp = '';
         }
     }

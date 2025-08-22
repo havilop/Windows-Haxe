@@ -10,6 +10,7 @@ import flixel.ui.FlxButton;
 import flixel.ui.FlxSpriteButton;
 import flixel.util.FlxColor;
 import haxe.Json;
+import flixel.addons.ui.FlxUIInputText;
 import lime.media.WebAudioContext;
 import sys.FileSystem;
 import sys.io.File;
@@ -70,6 +71,12 @@ class SettingsApplication extends App
     var buttonChangeIcon:FlxButton;
     var textAutoLogin:FlxText;
     var buttonAutoLogin:FlxButton;
+    var secondAllow:Bool = false;
+    var fieldName:FlxUIInputText;
+    var textNewName:FlxText;
+    var buttonback:FlxButton;
+    var buttonOK:FlxButton;
+    var fieldPassword:FlxUIInputText;
 
     
     
@@ -309,7 +316,7 @@ var cur = l.wallpaper;
         itemsUserAccount.add(textUser);
 
         buttonChangeName = new FlxButton(0,0,l.curLanguage == "en" ? "Change name" : "Изменить имя",function name() {
-            
+            secondAllow = true;
         });
         buttonChangeName.label.setFormat(l.curLanguage == "en" ? BackendAssets.my : BackendAssets.ru,25,0x35599C,LEFT);
         buttonChangeName.makeGraphic(200,30,FlxColor.TRANSPARENT);
@@ -355,6 +362,37 @@ var cur = l.wallpaper;
         buttonAutoLogin.loadGraphic(l.autologin == false ? "assets/images/buttonoff.png" : l.autologin == true ? "assets/images/buttonon.png" : "assets/images/buttonon.png");
         buttonAutoLogin.updateHitbox();
         itemsUserAccount.add(buttonAutoLogin);
+
+        buttonback = new FlxButton(0,0,null,function name() {
+            secondAllow = false;
+        });
+        buttonback.loadGraphic("assets/images/back.png");
+        buttonback.updateHitbox();
+        itemsUserAccount.add(buttonback);
+
+        textNewName = new FlxText(0,0,0,l.curLanguage == "en" ? "Please, write new name" : "Пожалуйста ведите новое имя",38);
+        textNewName.color = FlxColor.BLACK;
+        textNewName.font = l.curLanguage == "en" ? BackendAssets.my : BackendAssets.ru ;
+        itemsUserAccount.add(textNewName);
+
+        fieldName = new FlxUIInputText(100,50,200,"",16);
+        fieldName.font = l.curLanguage == "en" ? BackendAssets.my : BackendAssets.ru ;
+        itemsUserAccount.add(fieldName);
+
+        buttonOK = new FlxButton(0,0,"OK",function name()
+            {
+                if (secondAllow == true)
+                {
+                    l.userName = fieldName.text;
+                    File.saveContent("assets/Windows/mbr.json", Json.stringify(l, null,""));
+                    secondAllow = false;
+                }
+            });
+        buttonOK.label.setFormat(l.curLanguage == "en" ? "assets/fonts/my.ttf" : "assets/fonts/ots.ttf", 26, 0x35599C, CENTER);
+        buttonOK.makeGraphic(150,50,FlxColor.TRANSPARENT);
+		buttonOK.updateHitbox();
+        buttonOK.text = l.curLanguage == "en" ? "OK" : "ОК";
+        itemsUserAccount.add(buttonOK);
     }
     public function plus() 
         {
@@ -460,6 +498,7 @@ var cur = l.wallpaper;
                 var curff = l.FPS;
                 textDisplayFPSCUR.text = l.curLanguage == "en" ? '$curff' : '$curff';
                 itemsUserAccount.visible = false;
+                secondAllow = false;
                 for (i in itemsUserAccount)
                 {
                     i.visible = false;
@@ -504,6 +543,7 @@ var cur = l.wallpaper;
                  displayBUTTONPLUS.visible = false;
                 displayBUTTONMINUS.visible = false;
                  itemsUserAccount.visible = false;
+                 secondAllow = false;
                 for (i in itemsUserAccount)
                 {
                     i.visible = false;
@@ -537,8 +577,24 @@ var cur = l.wallpaper;
                 itemsUserAccount.visible = true;
                 for (i in itemsUserAccount)
                 {
-                    i.visible = true;
+                    if (secondAllow == false) 
+                    {
+                        i.visible = true;
+                        buttonback.visible = false;
+                        textNewName.visible = false;
+                        fieldName.visible = false;
+                        buttonOK.visible = false;                                                                         
+                    }
+                    if (secondAllow == true)
+                    {
+                        i.visible = false;
+                        buttonback.visible = true;
+                        textNewName.visible = true;
+                        fieldName.visible = true;
+                        buttonOK.visible = true;
+                    }
                 }
+                textUser.text = l.userName;
         }
         bg.x = window.x;
         bg.y = window.y;
@@ -641,7 +697,20 @@ var cur = l.wallpaper;
         textAutoLogin.y = window.y + 250;
 
         buttonAutoLogin.x = window.x + 500;
-        buttonAutoLogin.y = window.y + 250;
+        buttonAutoLogin.y = window.y + 253;
+
+        buttonback.x = window.x + 1125;
+        buttonback.y = window.y + 30;
+
+        textNewName.x = window.x + 350;
+        textNewName.y = window.y + 30;
+
+        fieldName.x = textNewName.x;
+        fieldName.y = textNewName.y + 100;
+
+        buttonOK.x = window.x + 1060;
+        buttonOK.y = window.y + 150;
+
     }
     override function destroy() {
         super.destroy();

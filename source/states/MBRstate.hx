@@ -1,4 +1,5 @@
 package states;
+import flixel.FlxSprite;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.text.FlxText;
@@ -41,13 +42,25 @@ class MBRstate extends FlxState
                 }
             }
 
-            textMBR = new FlxText(0,FlxG.height - 60,0,"Checking... MBR File",42);
+            textMBR = new FlxText(0,FlxG.height - 60,0,"",42);
             add(textMBR);
+               var logo = new FlxSprite(0,0,"assets/images/logo.png");
+            logo.screenCenter(XY);
+			logo.x += 50;
+            logo.visible = false;
+            logo.setGraphicSize(180,180);
+            logo.y -= FlxG.height - 800;
+            add(logo);
             Timer.delay(function MBRSTATUS() {
                 checkMBRstatus = true;
-            }, 2000);
+            }, 3000);
 
-   
+             Timer.delay(function MBRSTATUS() {
+                
+      logo.visible = true;
+            trace(logo.y);
+            }, 1000);
+           
     }
     override function update(elapsed:Float) {
         super.update(elapsed);

@@ -324,6 +324,6 @@ if(FlxG.mouse.overlaps(barChoose) && allow == false){
 	}
 	override function destroy() {
 		super.destroy(); // Важно вызывать родительский destroy!
-		FlxG.bitmap.dumpCache();
+		
 	}
 }
