@@ -17,6 +17,7 @@ import states.MBRstate;
 import states.OOBEState;
 import states.SetupState;
 import states.WindowsState;
+import hscript.*;
 
 typedef Cs = {
     var isWindowsInstalled:Bool;
@@ -135,6 +136,10 @@ class ConsoleApp extends App
                 {
                     logToConsole(apps);
                 }
+                for (apps in FileSystem.readDirectory("assets/Windows/applications"))
+                {
+                    logToConsole(apps);
+                }
                 case "random":
                 consoleOutput.text = "";
                 logToConsole("Type stop to exit random words");
@@ -168,6 +173,40 @@ class ConsoleApp extends App
                         logToConsole('Success! the app $apps is open');
                         WindowsState.openApp(apps);
                         trace("Function Called");
+                    }
+                }
+                for (files in FileSystem.readDirectory("assets/Windows/applications"))
+                {
+                    if (text == files)
+                    {
+                        var v = "assets/Windows/applications" + "/" + files;
+                        trace(v);
+                        var info = File.getContent(v);
+                        trace(info);
+
+                               var parser = new Parser();
+        var program = parser.parseString(info);
+        
+        var interpreter = new Interp();
+        
+        // functions api;
+        interpreter.variables.set("trace", function(x) trace(x));
+
+         var ConsoleApp = {
+        logToConsole: function(message:Dynamic) {
+            logToConsole(Std.string(message));
+        },
+        onConsoleCommandEntered: function(message:Dynamic) {
+          onConsoleCommandEntered(message,"enter");
+        },
+    
+    };
+        
+    
+        
+        interpreter.variables.set("ConsoleApp", ConsoleApp);
+        interpreter.execute(program);
+
                     }
                 }
         if (IsRandom == true)

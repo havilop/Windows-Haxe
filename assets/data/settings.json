@@ -6,6 +6,6 @@
 	"fastBIOS": false,
 	"OOBE": false,
 	"allow": false,
-	"console": true,
+	"console": false,
 	"boot": "ssd"
 }

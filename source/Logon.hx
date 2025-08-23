@@ -1,3 +1,4 @@
+import applications.ConsoleApp;
 import haxe.Timer;
 import flixel.FlxSprite;
 import flixel.addons.ui.FlxUIInputText;

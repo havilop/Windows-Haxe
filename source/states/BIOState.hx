@@ -168,7 +168,7 @@ trace(screenX);
         buttonUSB.makeGraphic(200,50,FlxColor.TRANSPARENT);
         itemsBios.add(buttonUSB);
 
-        textONE = new FlxText(300,145,0,"0",30);
+        textONE = new FlxText(300,145,0,"1",30);
         textONE.font = BackendAssets.my;
         itemsBios.add(textONE);
 
@@ -176,7 +176,7 @@ trace(screenX);
         textCurrentBoot.font = BackendAssets.my;
         itemsBios.add(textCurrentBoot);
 
-        textTWO = new FlxText(300,190,0,"1",30);
+        textTWO = new FlxText(300,190,0,"2",30);
         textTWO.font = BackendAssets.my;
         textTWO.visible = false;
         itemsBios.add(textTWO);
