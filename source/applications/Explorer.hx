@@ -14,6 +14,7 @@ import flixel.group.FlxSpriteGroup;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.ui.FlxButton;
 import flixel.FlxG;
+import flixel.addons.ui.FlxUIInputText;
 import flixel.FlxSprite;
 
 class Explorer extends App 
@@ -24,9 +25,14 @@ class Explorer extends App
     var buttonBack:FlxButton;
     var buttonDelete:FlxButton;
     var buttonCreate:FlxButton;
+    var fieldName:FlxUIInputText;
     var itemsExplorer:FlxTypedGroup<ItemExplorer>;
+    var buttonBackRED:FlxButton;
+    var isField:Bool = false;
+    public static var isClose:Bool = false;
     public static var isUpdate:Bool = false;
     public static var currentPath:String;
+    public static var closeAlso:Bool = false;
 
     function Appear() 
     {
@@ -44,19 +50,34 @@ class Explorer extends App
         bgupItems.updateHitbox();
         add(bgupItems);
 
+        buttonBackRED = new FlxButton(0,0,'');
+        buttonBackRED.loadGraphic("assets/images/explorer/backRED.png");
+        buttonBackRED.setGraphicSize(50,50);
+        buttonBackRED.updateHitbox();
+        add(buttonBackRED);
+
         buttonBack = new FlxButton(0,0,'',toParent);
         buttonBack.loadGraphic("assets/images/explorer/back.png");
         buttonBack.setGraphicSize(50,50);
         buttonBack.updateHitbox();
         add(buttonBack);
 
-        buttonDelete = new FlxButton(0,0,'',function name() {});
+   /*     buttonDelete = new FlxButton(0,0,'',function name() {});
         buttonDelete.loadGraphic("assets/images/explorer/delete.png");
         buttonDelete.setGraphicSize(50,50);
         buttonDelete.updateHitbox();
-        add(buttonDelete);
+        add(buttonDelete);*/
 
-        buttonCreate = new FlxButton(0,0,'',function name() {});
+        fieldName = new FlxUIInputText(0,0,300,"",16);
+        fieldName.font = BackendAssets.my;
+        fieldName.visible = false;
+        add(fieldName);
+
+        buttonCreate = new FlxButton(0,0,'',function name() {
+            fieldName.text = "";
+            fieldName.visible = true;
+            isField = true;
+        });
         buttonCreate.loadGraphic("assets/images/explorer/create.png");
         buttonCreate.setGraphicSize(50,50);
         buttonCreate.updateHitbox();
@@ -70,10 +91,15 @@ class Explorer extends App
     public function updateFileList() 
     {
         trace(currentPath);
+        fieldName.text = "";
+        fieldName.visible = false;
+        isField = false;
+
         buttonBack.visible = true;
          if (currentPath == "assets")
         {
             buttonBack.visible = false;
+            buttonBackRED.visible = true;
         }
         itemsExplorer.clear();
 
@@ -134,13 +160,16 @@ class Explorer extends App
 
         },function name() 
         {
+            Explorer.isClose = false;
             App.listApplications.remove("explorer");
             this.updateItems();
             this.kill();
+            
         },function name() 
         {
             
         }, true);
+        window.screenCenter(XY);
         add(window);
     }
     override function update(elapsed:Float) 
@@ -152,11 +181,23 @@ class Explorer extends App
             updateFileList();
             isUpdate = false;
         }
+        if (isClose == true && closeAlso)
+        {
+            App.listApplications.remove("explorer");
+            this.updateItems();
+            this.kill();
+            Explorer.isClose = false;
+            Explorer.closeAlso = false;
+        }
         bg.x = window.x;
         bg.y = window.y;
 
         bgupItems.x = window.x;
         bgupItems.y = window.y;
+
+        
+        buttonBackRED.x = window.x + 15;
+        buttonBackRED.y = window.y + 35;
 
         buttonBack.x = window.x + 15;
         buttonBack.y = window.y + 35;
@@ -164,8 +205,11 @@ class Explorer extends App
         buttonCreate.x = window.x + 75;
         buttonCreate.y = window.y + 35;
 
-        buttonDelete.x = window.x + 140;
-        buttonDelete.y = window.y + 35;
+    //    buttonDelete.x = window.x + 140;
+    //    buttonDelete.y = window.y + 35;
+
+        fieldName.x = window.x + 200;
+        fieldName.y = window.y + 35;
 
         for (num => i in itemsExplorer)
         {
@@ -178,6 +222,11 @@ class Explorer extends App
             {
 
             }
+        }
+        if (isField == true && fieldName.text != "" && FlxG.keys.justPressed.ENTER)
+        {
+            FileSystem.createDirectory(currentPath + "/" + fieldName.text);
+            updateFileList();
         }
     }
 }
@@ -194,6 +243,8 @@ class ItemExplorer extends FlxSpriteGroup
     var isImage:Bool = false;
     var name:String;
     var selfPath:String;
+    var isPressed:Bool = false;
+    var extramenu:FlxButton;
 
     public function new (X:Int,Y:Int,Name:String,IsFolder:Bool,IsHaxe:Bool,IsTxt:Bool,IsImage:Bool,SelfPath:String) 
     {
@@ -216,6 +267,24 @@ class ItemExplorer extends FlxSpriteGroup
         button.label.setFormat(BackendAssets.my,12);
         button.color = FlxColor.BLACK;
         add(button);
+
+        extramenu = new FlxButton(0,0,'Delete',function name() {
+            if(isFolder)
+            {
+                FileSystem.deleteDirectory(selfPath);
+                Explorer.isUpdate = true;
+            } else {
+            FileSystem.deleteFile(selfPath);
+            Explorer.isUpdate = true;
+            }
+        });
+        extramenu.loadGraphic("assets/images/extramenu.png");
+        extramenu.setGraphicSize(200,25);
+        extramenu.label.setFormat(BackendAssets.my,14,FlxColor.WHITE,LEFT);
+        extramenu.updateHitbox();
+        extramenu.visible = false;
+        add(extramenu);
+
     }
     function iconSpriteLoad() 
     {
@@ -269,7 +338,35 @@ function onClick():Void {
     }
     if (isImage)
     {
-
+        if (Explorer.isClose == true)
+        {
+            Photos.pathFile = selfPath;
+            Photos.updateFile();
+            Explorer.closeAlso = true;
+        }
+        if (Explorer.isClose == false) {
+        WindowsState.openApp("photos");
+        Photos.pathFile = selfPath;
+        }
     }
+ }
+ override function update(elapsed:Float) {
+  super.update(elapsed);
+
+  if(FlxG.mouse.overlaps(button) && FlxG.mouse.justPressedRight && isPressed == false)
+  {
+    isPressed = true;
+    extramenu.x = FlxG.mouse.x;
+    extramenu.y = FlxG.mouse.y;
+    extramenu.visible = true;
+  }
+  if(FlxG.mouse.justPressed && isPressed == true)
+  {
+    Timer.delay(function name() {
+    isPressed = false;
+    extramenu.visible = false;
+    },150);
+   
+  }
  }
 }

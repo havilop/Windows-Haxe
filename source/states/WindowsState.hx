@@ -1,4 +1,5 @@
 package states;
+import applications.Photos;
 import openfl.display.BitmapData;
 import applications.Notepad;
 import applications.Explorer;
@@ -189,6 +190,10 @@ is = true;
             case "notepad":
             var notepad = new Notepad();
             add(notepad);
+            currentApp = '';
+            case "photos":
+            var photos = new Photos();
+            add(photos);
             currentApp = '';
         }
     }
