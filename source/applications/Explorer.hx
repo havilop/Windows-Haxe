@@ -28,6 +28,7 @@ class Explorer extends App
     var fieldName:FlxUIInputText;
     var itemsExplorer:FlxTypedGroup<ItemExplorer>;
     var buttonBackRED:FlxButton;
+    var textCurrentPAth:FlxText;
     var isField:Bool = false;
     public static var isClose:Bool = false;
     public static var isCloseNotepad:Bool = false;
@@ -74,6 +75,10 @@ class Explorer extends App
         fieldName.font = BackendAssets.my;
         fieldName.visible = false;
         add(fieldName);
+
+        textCurrentPAth = new FlxText(0,0,0,currentPath,16);
+        textCurrentPAth.font = BackendAssets.my;
+        add(textCurrentPAth);
 
         buttonCreate = new FlxButton(0,0,'',function name() {
             fieldName.text = "";
@@ -215,6 +220,9 @@ class Explorer extends App
         bgupItems.x = window.x;
         bgupItems.y = window.y;
 
+        textCurrentPAth.x = window.x + 150;
+        textCurrentPAth.y = window.y + 65;
+        textCurrentPAth.text = currentPath;
         
         buttonBackRED.x = window.x + 15;
         buttonBackRED.y = window.y + 35;

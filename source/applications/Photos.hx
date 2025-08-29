@@ -64,6 +64,7 @@ class Photos extends App
             App.listApplications.remove("photos");
             this.updateItems();
             this.kill();
+            
         },function name() 
         {
             

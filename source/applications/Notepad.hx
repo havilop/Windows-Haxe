@@ -30,7 +30,7 @@ class Notepad extends App
         bg = new FlxSprite(0,0,'assets/images/setup/bg.png');
         bg.setGraphicSize(1200,800);
         bg.updateHitbox();
-        bg.color = 0x272729;
+        bg.color = 0x202022;
         add(bg);
 
         buttonOpen = new FlxButton(0,0,"",function name() {
@@ -73,7 +73,7 @@ class Notepad extends App
         textField.wordWrap = true;
         textField.type = openfl.text.TextFieldType.INPUT;
         
-        var format:TextFormat = new TextFormat(BackendAssets.my, 22, 0xFFFFFF);
+        var format:TextFormat = new TextFormat(BackendAssets.my, 16, 0xFFFFFF);
         textField.defaultTextFormat = format;
         textField.setTextFormat(format);
         

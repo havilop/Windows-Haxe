@@ -202,7 +202,7 @@ class ConsoleApp extends App
                         var info = File.getContent(PathFile);
                         trace(info);
 
-        var parser = new Parser();
+      /*  var parser = new Parser();
         var program = parser.parseString(info);
         
         var interpreter = new Interp();
@@ -244,7 +244,8 @@ class ConsoleApp extends App
         interpreter.variables.set("Json", Json);
         interpreter.variables.set("WindowsState", WindowsState);
         interpreter.variables.set("ConsoleApp", ConsoleApp);
-        interpreter.execute(program);
+        interpreter.execute(program); */
+        Interpritator.main(info);
 
                     }
                 }

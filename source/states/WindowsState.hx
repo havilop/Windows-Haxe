@@ -1,4 +1,5 @@
 package states;
+import openfl.display.Bitmap;
 import applications.Photos;
 import openfl.display.BitmapData;
 import applications.Notepad;
@@ -47,8 +48,10 @@ class WindowsState extends FlxState
     static public var isConsole:Bool;
     static public var IsReset:Bool;
     static public var IsSystem:Bool;
+    static public var newImage:Dynamic;
     static public var currentApp:String;
     static public var errortext:String = "";
+    static public var isChange:Bool = false;
 
     public static function openApp(name:String)
     {
@@ -78,7 +81,6 @@ class WindowsState extends FlxState
             }
         }
         var bitmapData:BitmapData = BitmapData.fromFile(o.wallpaper);
-        
         bg = new FlxSprite(0,0);
         bg.loadGraphic(bitmapData);
         bg.setGraphicSize(FlxG.width,FlxG.height);
@@ -110,6 +112,10 @@ class WindowsState extends FlxState
         add(errorText);
 
     }
+    public static function changeWallpaper(NewImage:Dynamic) {
+        newImage = NewImage;
+        isChange = true;
+    }
     override function update(elapsed:Float) {
         super.update(elapsed);
 
@@ -117,6 +123,15 @@ class WindowsState extends FlxState
         FlxG.updateFramerate = o.FPS;
         
         errorText.text = errortext;
+
+        if (isChange)
+        {
+            var bitmapData:BitmapData = BitmapData.fromFile(newImage);
+            WindowsState.bg.loadGraphic(bitmapData);
+            o.wallpaper = newImage;
+            File.saveContent("assets/Windows/mbr.json", Json.stringify(o, null,""));
+            isChange = false;
+        }
 
         if (IsSystem == true)
         {
