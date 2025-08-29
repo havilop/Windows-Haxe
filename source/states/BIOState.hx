@@ -293,6 +293,10 @@ trace(screenX);
         {
             IsBios = true;
         }
+        if (FlxG.keys.justPressed.ONE)
+        {
+            FlxG.switchState(DebugState.new);
+        }
         if (IsBios == true)
         {
 

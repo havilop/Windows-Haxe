@@ -1,4 +1,5 @@
 package states;
+import openfl.display.BitmapData;
 import applications.Notepad;
 import applications.Explorer;
 import flixel.text.FlxText;
@@ -73,9 +74,10 @@ class WindowsState extends FlxState
                 o = Json.parse(data);
             }
         }
-
-        bg = new FlxSprite(0,0,o.wallpaper);
-        bg.loadGraphic(o.wallpaper);
+        var bitmapData:BitmapData = BitmapData.fromFile(o.wallpaper);
+        
+        bg = new FlxSprite(0,0);
+        bg.loadGraphic(bitmapData);
         bg.setGraphicSize(FlxG.width,FlxG.height);
         bg.updateHitbox();
         bg.screenCenter(X);

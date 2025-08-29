@@ -1,5 +1,6 @@
 package applications;
 
+import openfl.display.BitmapData;
 import haxe.Timer;
 import flixel.FlxG;
 import flixel.FlxGame;
@@ -512,8 +513,8 @@ var cur = l.wallpaper;
                 textPesonalizationWallpaper.visible = true;
 
                 wallpaperCURRENT.visible = true;
-
-                wallpaperCURRENT.loadGraphic(l.wallpaper);
+                var bitmapData:BitmapData = BitmapData.fromFile(l.wallpaper);
+                wallpaperCURRENT.loadGraphic(bitmapData);
                 wallpaperCURRENT.setGraphicSize(500,250);
                 wallpaperCURRENT.updateHitbox();
 

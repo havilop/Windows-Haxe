@@ -1,4 +1,6 @@
 package applications;
+import haxe.Timer;
+import openfl.display.BitmapData;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup;
 import haxe.Json;
@@ -24,6 +26,8 @@ typedef Cs = {
     var console:Bool;
     var autoMBR:Bool;
     var fastBIOS:Bool;
+    var wallpaper:String;
+    var userName:String;
 } 
 class ConsoleApp extends App
 {
@@ -41,12 +45,14 @@ class ConsoleApp extends App
     var listWords:Array<String> = ["god","russia","sex","windowshaxe","girl","house","engineer","centre","throw","work","water","bottle","sunbed","loggia","button","bother","tunell","hardwar","rabbit","ride","blow up","click","chaos","virus","USA","tramp","potato","harvest","host","fine","diamond"];
     var listCommand:Array<String> = ["help","exit","clear","shutdown","apps","random"];
     var o:Cs;
+    var l:Cs;
 
     	public function int(from:Int, to:Int):Int
 	{
 		return from + Math.floor(((to - from + 1) * Math.random()));
 	}
 
+      
     public function new ()
     {
         super();
@@ -76,6 +82,11 @@ class ConsoleApp extends App
         {
             var data = File.getContent("assets/data/settings.json");
             o = Json.parse(data);
+        }
+        if (FileSystem.exists("assets/data/settings.json"))
+        {
+            var data = File.getContent("assets/Windows/mbr.json");
+            l = Json.parse(data);
         }
         },exit,
         function minus() 
@@ -138,7 +149,11 @@ class ConsoleApp extends App
                 }
                 for (apps in FileSystem.readDirectory("assets/Windows/applications"))
                 {
-                    logToConsole(apps);
+                    var filez = "assets/Windows/applications" + "/" + apps;
+                    var PathFile = filez + "/" + '$apps.hx';
+                    var normal = PathFile.split("/");
+                    var file = normal[4];
+                    logToConsole(file);
                 }
                 case "random":
                 consoleOutput.text = "";
@@ -177,22 +192,29 @@ class ConsoleApp extends App
                 }
                 for (files in FileSystem.readDirectory("assets/Windows/applications"))
                 {
-                    if (text == files)
+                    var filez = "assets/Windows/applications" + "/" + files;
+                    var PathFile = filez + "/" + '$files.hx';
+                    var normal = PathFile.split("/");
+                    var file = normal[4];
+
+                    if (text == file)  
                     {
-                        var v = "assets/Windows/applications" + "/" + files;
-                        trace(v);
-                        var info = File.getContent(v);
+                        var info = File.getContent(PathFile);
                         trace(info);
 
-                               var parser = new Parser();
+        var parser = new Parser();
         var program = parser.parseString(info);
         
         var interpreter = new Interp();
-        
-        // functions api;
+    // functions api;
         interpreter.variables.set("trace", function(x) trace(x));
+        interpreter.variables.set("timeDelay", function(f:() -> Void,time:Int) {
+            Timer.delay(f,time);
+        });
+        
+   
 
-         var ConsoleApp = {
+        var ConsoleApp = {
         logToConsole: function(message:Dynamic) {
             logToConsole(Std.string(message));
         },
@@ -201,9 +223,26 @@ class ConsoleApp extends App
         },
     
     };
-        
+        var WindowsState = {
+  
+        changeWallpaper: function(NewImage:Dynamic) {
+            var bitmapData:BitmapData = BitmapData.fromFile(NewImage);
+            WindowsState.bg.loadGraphic(bitmapData);
+            l.wallpaper = NewImage;
+            File.saveContent("assets/Windows/mbr.json", Json.stringify(l, null,""));
+        },
+        resetTaskBar: function () {
+           WindowsState.IsReset = true;
+           trace("reset");  
+        },
     
-        
+    };
+        var Json = {
+       parse: function(data:String) {
+            Json.parse(data);
+        },};
+        interpreter.variables.set("Json", Json);
+        interpreter.variables.set("WindowsState", WindowsState);
         interpreter.variables.set("ConsoleApp", ConsoleApp);
         interpreter.execute(program);
 
