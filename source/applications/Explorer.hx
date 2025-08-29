@@ -30,9 +30,11 @@ class Explorer extends App
     var buttonBackRED:FlxButton;
     var isField:Bool = false;
     public static var isClose:Bool = false;
+    public static var isCloseNotepad:Bool = false;
     public static var isUpdate:Bool = false;
     public static var currentPath:String;
     public static var closeAlso:Bool = false;
+    public static var closeAlsoNotePad:Bool = false;
 
     function Appear() 
     {
@@ -162,6 +164,7 @@ class Explorer extends App
         },function name() 
         {
             Explorer.isClose = false;
+            Explorer.isCloseNotepad = false;
             App.listApplications.remove("explorer");
             this.updateItems();
             this.kill();
@@ -189,6 +192,22 @@ class Explorer extends App
             this.kill();
             Explorer.isClose = false;
             Explorer.closeAlso = false;
+        }
+        if (isCloseNotepad == true && closeAlsoNotePad)
+        {
+            App.listApplications.remove("explorer");
+            this.updateItems();
+            this.kill();
+            Explorer.isCloseNotepad = false;
+            Explorer.closeAlsoNotePad = false;
+        }
+        if (isClose == true)
+        {
+            window.titleText.text = "Explorer - open file to add";
+        }
+        if (isCloseNotepad == true)
+        {
+            window.titleText.text = "Explorer - open file to add";
         }
         bg.x = window.x;
         bg.y = window.y;
@@ -226,7 +245,31 @@ class Explorer extends App
         }
         if (isField == true && fieldName.text != "" && FlxG.keys.justPressed.ENTER)
         {
-            FileSystem.createDirectory(currentPath + "/" + fieldName.text);
+            var a = fieldName.text;
+            var stored = a;
+            var b = stored.split('.');
+            b.pop();
+            var f = b.toString();
+            var result = StringTools.replace(f, "[", "");
+            result = StringTools.replace(result, "]", "");
+            var c = result;
+            trace(c);
+            if (fieldName.text == '$c.txt')
+                {
+                    File.saveContent('$currentPath/$c.txt',"");
+                }
+                if (fieldName.text == '$c.hx')
+                {
+                    File.saveContent('$currentPath/$c.hx',"");
+                }
+                if (fieldName.text == '$c.json')
+                {
+                    File.saveContent('$currentPath/$c.json',"");
+                }
+            if (fieldName.text == '$a')
+            {
+                FileSystem.createDirectory(currentPath + "/" + a);
+            }
             updateFileList();
         }
     }
@@ -248,6 +291,7 @@ class ItemExplorer extends FlxSpriteGroup
     var isPressed:Bool = false;
     var errorText:FlxText;
     var extramenu:FlxButton;
+    var extramenuChange:FlxButton;
 
     public function new (X:Int,Y:Int,Name:String,IsFolder:Bool,IsHaxe:Bool,IsTxt:Bool,IsImage:Bool,SelfPath:String,IsJson:Bool) 
     {
@@ -298,6 +342,20 @@ class ItemExplorer extends FlxSpriteGroup
         extramenu.updateHitbox();
         extramenu.visible = false;
         add(extramenu);
+
+        extramenuChange = new FlxButton(0,0,'Change',function name() {
+            WindowsState.openApp("notepad");
+            var info = File.getContent(selfPath);
+            Notepad.curpath = selfPath;
+            Notepad.textinfo = info;
+             Notepad.isUpdate = true;
+        });
+        extramenuChange.loadGraphic("assets/images/extramenu.png");
+        extramenuChange.setGraphicSize(200,25);
+        extramenuChange.label.setFormat(BackendAssets.my,14,FlxColor.WHITE,LEFT);
+        extramenuChange.updateHitbox();
+        extramenuChange.visible = false;
+        add(extramenuChange);
 
     }
     function iconSpriteLoad() 
@@ -359,7 +417,21 @@ function onClick():Void {
     }
     if (isTxt)
     {
-
+        if (Explorer.isCloseNotepad == true)
+        {
+            var info = File.getContent(selfPath);
+            Notepad.textinfo = info;
+            Notepad.curpath = selfPath;
+            Notepad.isUpdate = true;
+            Explorer.closeAlsoNotePad = true;
+        }
+        if (Explorer.isCloseNotepad == false) {
+        var info = File.getContent(selfPath);
+        WindowsState.openApp("notepad");
+        Notepad.curpath = selfPath;
+        Notepad.textinfo = info;
+        Notepad.isUpdate = true;
+        }
     }
     if (isImage)
     {
@@ -384,12 +456,19 @@ function onClick():Void {
     extramenu.x = FlxG.mouse.x;
     extramenu.y = FlxG.mouse.y;
     extramenu.visible = true;
+    if (isHaxe || isJson || isTxt)
+    {
+        extramenuChange.x = FlxG.mouse.x;
+        extramenuChange.y = FlxG.mouse.y + 25;
+        extramenuChange.visible = true;
+    }
   }
   if(FlxG.mouse.justPressed && isPressed == true)
   {
     Timer.delay(function name() {
     isPressed = false;
     extramenu.visible = false;
+    extramenuChange.visible = false;
     },150);
    
   }

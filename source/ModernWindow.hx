@@ -7,7 +7,7 @@ import flixel.util.FlxColor;
 class ModernWindow extends FlxSprite
 {
     
-    private var titleText:FlxText;
+    public var titleText:FlxText;
     private var iconWindow:FlxSprite;
     public var exitWindow:FlxButton;
     var minusWindow:FlxButton;

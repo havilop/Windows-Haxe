@@ -89,5 +89,6 @@
 	<!-- _________________________________ Custom _______________________________ -->
 
 	<!--Place custom nodes like icons here-->
+	<assets path='backend' rename='content' embed='false' type='template' unless="mac"/>
 
 </project>
