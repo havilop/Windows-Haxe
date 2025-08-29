@@ -116,10 +116,11 @@ class Explorer extends App
             trace(isFolder);
             var isHaxe:Bool = BackendAssets.isFile(fullPath,"hx");
             var isTxt:Bool = BackendAssets.isFile(fullPath,"txt");
-            var isImage:Bool = BackendAssets.isFile(fullPath,"png"); 
+            var isImage:Bool = BackendAssets.isFile(fullPath,"png");
+            var isJson:Bool = BackendAssets.isFile(fullPath,"json");
             var selfPath = fullPath;
 
-            var item = new ItemExplorer(0,0,i,isFolder,isHaxe,isTxt,isImage,selfPath);
+            var item = new ItemExplorer(0,0,i,isFolder,isHaxe,isTxt,isImage,selfPath,isJson);
             itemsExplorer.add(item);
         }
 
@@ -242,11 +243,13 @@ class ItemExplorer extends FlxSpriteGroup
     var isTxt:Bool = false;
     var isImage:Bool = false;
     var name:String;
+    var isJson:Bool = false;
     var selfPath:String;
     var isPressed:Bool = false;
+    var errorText:FlxText;
     var extramenu:FlxButton;
 
-    public function new (X:Int,Y:Int,Name:String,IsFolder:Bool,IsHaxe:Bool,IsTxt:Bool,IsImage:Bool,SelfPath:String) 
+    public function new (X:Int,Y:Int,Name:String,IsFolder:Bool,IsHaxe:Bool,IsTxt:Bool,IsImage:Bool,SelfPath:String,IsJson:Bool) 
     {
         super(X,Y);
 
@@ -256,6 +259,7 @@ class ItemExplorer extends FlxSpriteGroup
         this.isImage = IsImage;
         this.name = Name;
         this.selfPath = SelfPath;
+        this.isJson = IsJson;
 
         icon = new FlxSprite(isFolder == true ? - 25 : -30,0,null);
         icon.loadGraphic(iconSpriteLoad());
@@ -263,12 +267,16 @@ class ItemExplorer extends FlxSpriteGroup
         icon.updateHitbox();
         add(icon);
 
+        errorText = new FlxText(500,0,0,'',32);
+        add(errorText);
+
         button = new FlxButton(0,0,name,onClick);
         button.label.setFormat(BackendAssets.my,12);
         button.color = FlxColor.BLACK;
         add(button);
 
         extramenu = new FlxButton(0,0,'Delete',function name() {
+            try {
             if(isFolder)
             {
                 FileSystem.deleteDirectory(selfPath);
@@ -277,6 +285,12 @@ class ItemExplorer extends FlxSpriteGroup
             FileSystem.deleteFile(selfPath);
             Explorer.isUpdate = true;
             }
+        } catch (e:Dynamic) {
+            errorText.text = 'error: ' + e;
+             Timer.delay(function name() {
+                    errorText.text = "";
+                },2000);
+        }
         });
         extramenu.loadGraphic("assets/images/extramenu.png");
         extramenu.setGraphicSize(200,25);
@@ -306,6 +320,10 @@ class ItemExplorer extends FlxSpriteGroup
         {
             pathImage = "assets/images/icons/photos.png";
         }
+        if (BackendAssets.isFile(name,"json"))
+        {
+            pathImage = "assets/images/icons/notepad.png";
+        }
         return pathImage;
     }
 function onClick():Void {
@@ -330,7 +348,14 @@ function onClick():Void {
     }
     if (isHaxe)
     {
-        trace(selfPath);
+        try {
+        Interpritator.main(selfPath);
+        } catch (e:Dynamic) {
+            errorText.text = 'error: ' + e;
+             Timer.delay(function name() {
+                    errorText.text = "";
+                },2000);
+        }
     }
     if (isTxt)
     {

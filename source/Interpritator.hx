@@ -1,48 +1,30 @@
-import flixel.FlxSprite;
-import sys.FileSystem;
 import haxe.Timer;
 import openfl.display.BitmapData;
-import sys.io.File;
 import states.WindowsState;
 import haxe.Json;
+import sys.io.File;
 import hscript.*;
-typedef Isw = {
+typedef Csd = {
     var wallpaper:String;
-} 
-class Interpritator
-{
+}
+class Interpritator {
+    public static var l:Csd;
+    public static function main(info:String) {
 
-    public static var info:String;
-    var l:Isw; 
-
-    public static function mai() 
-    {
         
-    
-     /*    if (FileSystem.exists("assets/data/settings.json"))
-        {
-            var data = File.getContent("assets/Windows/mbr.json");
-            l = Json.parse(data);
-     */   
-     var parser = new Parser();
-    var program = parser.parseString(info);
-    var interp = new Interp();
-          // functions api;
+
+         var data = File.getContent("assets/Windows/mbr.json");
+        l = Json.parse(data);
+
+        var parser = new Parser();
+        var interp = new Interp();
+        
         interp.variables.set("trace", function(x) trace(x));
         interp.variables.set("timeDelay", function(f:() -> Void,time:Int) {
             Timer.delay(f,time);
         });
-
-   /*     var ConsoleApp = {
-        logToConsole: function(message:Dynamic) {
-            logToConsole(Std.string(message));
-        },
-        onConsoleCommandEntered: function(message:Dynamic) {
-          onConsoleCommandEntered(message,"enter");
-        },
-    
-    };*/
-/*        var WindowsState = {
+        
+        var WindowsState = {
   
         changeWallpaper: function(NewImage:Dynamic) {
             var bitmapData:BitmapData = BitmapData.fromFile(NewImage);
@@ -53,16 +35,17 @@ class Interpritator
         resetTaskBar: function () {
            WindowsState.IsReset = true;
            trace("reset");  
-        }, */
+        },
     
-  //  };
+    };
         var Json = {
        parse: function(data:String) {
             Json.parse(data);
         },};
         interp.variables.set("Json", Json);
-       //interp.variables.set("WindowsState", WindowsState);
-       //this.variables.set("ConsoleApp", ConsoleApp);
-       interp.execute(program);
+        interp.variables.set("WindowsState", WindowsState);
+        var infoo = File.getContent(info);
+        var ast = parser.parseString(infoo);
+        interp.execute(ast);
     }
 }

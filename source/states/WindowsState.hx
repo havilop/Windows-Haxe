@@ -42,11 +42,13 @@ class WindowsState extends FlxState
     var settings:SettingsApplication;
     var taskbarmenu:FlxButton;
     var test:ConsoleApp;
+    var errorText:FlxText;
     static public var taskBar:TaskBar;
     static public var isConsole:Bool;
     static public var IsReset:Bool;
     static public var IsSystem:Bool;
     static public var currentApp:String;
+    static public var errortext:String = "";
 
     public static function openApp(name:String)
     {
@@ -102,6 +104,11 @@ class WindowsState extends FlxState
         screenLogon = new Logon();
         add(screenLogon);
 
+        errorText = new FlxText(0,0,0,'',32);
+        errorText.visible = true;
+        errorText.screenCenter(X);
+        add(errorText);
+
     }
     override function update(elapsed:Float) {
         super.update(elapsed);
@@ -109,6 +116,8 @@ class WindowsState extends FlxState
         FlxG.drawFramerate = o.FPS;
         FlxG.updateFramerate = o.FPS;
         
+        errorText.text = errortext;
+
         if (IsSystem == true)
         {
             settings = new SettingsApplication();
