@@ -144,6 +144,7 @@ class WindowsState extends FlxState
         {
             taskBar.kill();
         taskBar = new TaskBar();
+        TaskBar.isClear = true;
         taskBar.visible = true;
         add(taskBar);
         IsReset = false;

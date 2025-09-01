@@ -34,6 +34,7 @@ class ConsoleApp extends App
     var window:ModernWindow;
     public var consoleInput:FlxInputText;
     public var consoleOutput:FlxText;
+    public static var isRestart:Bool = false;
     var storedVarOutPut:Dynamic;
     var IsUPorDOWN:Bool = false;
     var IsRandom:Bool;
@@ -98,7 +99,7 @@ class ConsoleApp extends App
   public function exit() 
         {
            App.listApplications.remove("console");
-            this.updateItems();
+           TaskBar.isClear = true;
             this.kill();
         }
  public function onConsoleCommandEntered(text:Dynamic, action:String):Void
@@ -129,6 +130,7 @@ class ConsoleApp extends App
                 case "shutdown /off":
                     Sys.exit(0);
                 case "shutdown /restart":
+                    ConsoleApp.isRestart = true;
                     for (i in App.listApplications)
                     {
                         trace(i);
@@ -136,7 +138,8 @@ class ConsoleApp extends App
                         trace(App.listApplications);
                     }
                     trace(App.listApplications);
-                    LoadState.setLoadingScreen(2000,BIOState.new);
+
+                    Timer.delay(function () {LoadState.setLoadingScreen(2000,BIOState.new);},200);
                 case "shutdown":
                     stopFunction();
                     logToConsole("shutdown /off");
@@ -201,51 +204,8 @@ class ConsoleApp extends App
                     {
                         var info = File.getContent(PathFile);
                         trace(info);
-
-      /*  var parser = new Parser();
-        var program = parser.parseString(info);
-        
-        var interpreter = new Interp();
-    // functions api;
-        interpreter.variables.set("trace", function(x) trace(x));
-        interpreter.variables.set("timeDelay", function(f:() -> Void,time:Int) {
-            Timer.delay(f,time);
-        });
-        
-   
-
-        var ConsoleApp = {
-        logToConsole: function(message:Dynamic) {
-            logToConsole(Std.string(message));
-        },
-        onConsoleCommandEntered: function(message:Dynamic) {
-          onConsoleCommandEntered(message,"enter");
-        },
-    
-    };
-        var WindowsState = {
-  
-        changeWallpaper: function(NewImage:Dynamic) {
-            var bitmapData:BitmapData = BitmapData.fromFile(NewImage);
-            WindowsState.bg.loadGraphic(bitmapData);
-            l.wallpaper = NewImage;
-            File.saveContent("assets/Windows/mbr.json", Json.stringify(l, null,""));
-        },
-        resetTaskBar: function () {
-           WindowsState.IsReset = true;
-           trace("reset");  
-        },
-    
-    };
-        var Json = {
-       parse: function(data:String) {
-            Json.parse(data);
-        },};
-        interpreter.variables.set("Json", Json);
-        interpreter.variables.set("WindowsState", WindowsState);
-        interpreter.variables.set("ConsoleApp", ConsoleApp);
-        interpreter.execute(program); */
-        Interpritator.main(info);
+                        
+                        Interpritator.main(PathFile);
 
                     }
                 }

@@ -1,3 +1,4 @@
+import applications.CustomApp;
 import flixel.FlxState;
 import openfl.text.TextField;
 import flixel.addons.ui.FlxUIInputText;
@@ -18,6 +19,7 @@ import states.WindowsState;
 import haxe.Json;
 import sys.io.File;
 import hscript.*;
+
 typedef Csd = {
     var wallpaper:String;
 }
@@ -29,7 +31,6 @@ class Interpritator {
 
         var data = File.getContent("assets/Windows/mbr.json");
         l = Json.parse(data);
-
         var parser = new Parser();
         parser.allowTypes = true;
         parser.allowJSON = true;
@@ -45,6 +46,9 @@ class Interpritator {
         FlxG.state.add(obj);
     }
 });
+        interp.variables.set("remove",function(obj):Void {
+            FlxG.state.remove(obj);
+    });
         interp.variables.set("FlxG",FlxG);
         interp.variables.set("FlxSprite",FlxSprite);
         interp.variables.set("FlxButton",FlxButton);
@@ -57,6 +61,7 @@ class Interpritator {
         interp.variables.set("FlxTypedGroup",FlxTypedGroup);
         interp.variables.set("FlxUIInputText",FlxUIInputText);
         interp.variables.set("TextField",TextField);
+        interp.variables.set("Logon",Logon);
         interp.variables.set("BackendAssets", BackendAssets);
         interp.variables.set("SettingsApplication",SettingsApplication);
         interp.variables.set("ModernWindow",ModernWindow);
@@ -66,6 +71,7 @@ class Interpritator {
         interp.variables.set("WindowsState",WindowsState);
         interp.variables.set("App",App);
         interp.variables.set("Json", Json);
+        interp.variables.set("CustomApp",CustomApp);
     
         var infoo = File.getContent(info);
         var ast = parser.parseString(infoo);

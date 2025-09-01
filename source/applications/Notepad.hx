@@ -21,6 +21,7 @@ class Notepad extends App
     var textCurrentPath:FlxText;
     var buttonClear:FlxButton;
     var textStatus:FlxText;
+    var buttonRun:FlxButton;
     static public var curpath:String = 'assets';
     static public var isUpdate:Bool = false;
     static public var textinfo:String = '';
@@ -30,7 +31,7 @@ class Notepad extends App
         bg = new FlxSprite(0,0,'assets/images/setup/bg.png');
         bg.setGraphicSize(1200,800);
         bg.updateHitbox();
-        bg.color = 0x202022;
+        bg.color = 0x111113;
         add(bg);
 
         buttonOpen = new FlxButton(0,0,"",function name() {
@@ -53,6 +54,14 @@ class Notepad extends App
         buttonClear.updateHitbox();
         add(buttonClear);
 
+        buttonRun = new FlxButton(0,0,'',function name() {
+            Interpritator.main(curpath);
+        });
+        buttonRun.loadGraphic("assets/images/apps/run.png");
+        buttonRun.updateHitbox();
+        buttonRun.visible = false;
+        add(buttonRun);
+
         textCurrentPath = new FlxText(0,0,0,'',16);
         textCurrentPath.font = BackendAssets.my;
         add(textCurrentPath);
@@ -66,9 +75,7 @@ class Notepad extends App
         textField.width = 1200;
         textField.height = 730;
         textField.background = true;
-        textField.backgroundColor = 0x2C2C2C;
-        textField.border = true;
-        textField.borderColor = 0x000000;
+        textField.backgroundColor = 0x202022;
         textField.multiline = true;
         textField.wordWrap = true;
         textField.type = openfl.text.TextFieldType.INPUT;
@@ -108,7 +115,7 @@ class Notepad extends App
         {
             FlxG.stage.removeChild(textField);
             App.listApplications.remove("notepad");
-            this.updateItems();
+            TaskBar.isClear = true;
             this.kill();
         },function name() 
         {
@@ -122,7 +129,13 @@ class Notepad extends App
 
         bg.x = window.x;
         bg.y = window.y;
-
+        
+        if (BackendAssets.isFile(curpath,"hx"))
+        {
+            buttonRun.visible = true;
+        } else {
+            buttonRun.visible = false;
+        }
         buttonOpen.x = window.x;
         buttonOpen.y = window.y + 25;
 
@@ -131,6 +144,9 @@ class Notepad extends App
 
         buttonClear.x = window.x + 50;
         buttonClear.y = window.y + 25;
+
+        buttonRun.x = window.x + 75;
+        buttonRun.y = window.y + 25;
 
         textField.x = window.x;
         textField.y = window.y + 66;
@@ -156,6 +172,13 @@ class Notepad extends App
         if (FlxG.keys.pressed.CONTROL && FlxG.keys.justPressed.S)
         {
             save();
+        }
+        if (ConsoleApp.isRestart)
+        {
+             FlxG.stage.removeChild(textField);
+             Timer.delay(function name() {
+                 ConsoleApp.isRestart = false;
+             },100);
         }
     }
 }

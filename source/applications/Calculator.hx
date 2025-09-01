@@ -197,7 +197,7 @@ class Calculator extends App
           }, function exit()
           {
             App.listApplications.remove("calc");
-            this.updateItems();
+            TaskBar.isClear = true;
             this.kill();
           }, function minus() {
             

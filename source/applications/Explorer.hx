@@ -171,7 +171,7 @@ class Explorer extends App
             Explorer.isClose = false;
             Explorer.isCloseNotepad = false;
             App.listApplications.remove("explorer");
-            this.updateItems();
+            TaskBar.isClear = true;
             this.kill();
             
         },function name() 

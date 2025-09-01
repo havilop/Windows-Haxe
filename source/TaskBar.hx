@@ -41,21 +41,19 @@ class TaskBar extends FlxGroup
     var bgturnoff:FlxSprite;
     var was:Bool = false;
     var off:FlxButton;
-    public var listApplications:Array<String> = [];
     var restart:FlxButton;
     var volume:FlxButton;
     var swithcFirstTimed:Bool = false;
     var wasOverlappin:Bool = false;
     var menu:FlxSprite;
+    static public var isUpdate:Bool = false;
+    static public var isClear:Bool = false; 
     var windowEXIT:CustomWindow;
     var menuextraSETTINGS:FlxButton;
     var menuextraOFF:FlxButton;
     var appsMenu:FlxGroup;
+    var items:FlxGroup;
 
-    public function updateTaskBarMembers() 
-    {
-        trace("Updated",listApplications);
-    }
     public function new() {
         super();
         if (FileSystem.exists("assets/Windows/mbr.json"))
@@ -103,7 +101,7 @@ class TaskBar extends FlxGroup
             restart.visible = true;
             off.visible = true;
         }
-
+    
         menu = new FlxSprite(0,0,"assets/images/menu.png");
         menu.y = o.taskbar == "down" ? FlxG.height - 768 : o.taskbar == "up" ? 40 : 40;
         menu.visible = false;
@@ -136,7 +134,7 @@ class TaskBar extends FlxGroup
         menuextraSETTINGS.visible = false;
         add(menuextraSETTINGS);
 
-        restart = new FlxButton(0,0,"",function name(){LoadState.setLoadingScreen(500,BIOState.new);});
+        restart = new FlxButton(0,0,"",function name(){ ConsoleApp.isRestart = true; Timer.delay(function name() {LoadState.setLoadingScreen(500,BIOState.new);},200);});
         restart.loadGraphic("assets/images/taskbar/restart.png");
         restart.updateHitbox();
         restart.text = o.curLanguage == "en" ? "Restart" : "Перезагрузка";
@@ -192,8 +190,12 @@ class TaskBar extends FlxGroup
         volume.x = FlxG.width - 90;
         volume.y += o.taskbar == "down" ? FlxG.height - 40 : o.taskbar == "up" ? 0 : 0; 
         add(volume);
+
+        items = new FlxGroup();
+		add(items);
         
         updateTime();
+        updateItems();
     }   
     override function update(elapsed:Float) {
         super.update(elapsed);
@@ -249,10 +251,41 @@ menuextraOFF.loadGraphic("assets/images/menuEXTRAOFF.png");
     }
     was = isOver;
     
-
+    if (isClear)
+    {
+        items.clear();
+        updateItems();
+        isClear = false;
+    }
+    
+   if (isUpdate)
+    {
+        updateItems();
+        isUpdate = false;
+    }
  updateTime();
     }
 
+     function createNewItem(x:Float,y:Float,name:String)
+        {
+        var item:FlxButton = new FlxButton(x,y,null,null);
+        item.loadGraphic('assets/images/icons/$name.png');
+        item.setGraphicSize(40,40);
+        item.updateHitbox();
+        return item;
+        }
+
+         function updateItems() {
+            for (num => i in App.listApplications)
+        {
+            var item = createNewItem((num * 50) + 50, App.isWindowsState == true ? WindowsState.taskBar.mainpart.y : 2000,i);
+            items.add(item);
+            
+            var up:FlxSprite = new FlxSprite((num * 50) + 50,App.isWindowsState == true ? WindowsState.taskBar.mainpart.y : 2000,'assets/images/icons/app.png');
+            up.updateHitbox();
+            items.add(up);
+        }
+        }
     
     private function updateTime():Void
     {

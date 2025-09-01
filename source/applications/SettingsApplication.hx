@@ -199,7 +199,6 @@ var cur = l.wallpaper;
         up = new FlxButton(0,0,"",function name() {
             l.taskbar = "up";
             File.saveContent("assets/Windows/mbr.json", Json.stringify(l, null,""));
-            WindowsState.taskBar.kill();
             WindowsState.IsReset = true;
         });
         up.label.setFormat(l.curLanguage == "en" ? "assets/fonts/my.ttf" : "assets/fonts/ots.ttf",16,0x35599C,CENTER);
@@ -213,7 +212,6 @@ var cur = l.wallpaper;
         down = new FlxButton(0,0,"",function name() {
              l.taskbar = "down";
             File.saveContent("assets/Windows/mbr.json", Json.stringify(l, null,""));
-            WindowsState.taskBar.kill();
             WindowsState.IsReset = true;
         });
         down.label.setFormat(l.curLanguage == "en" ? "assets/fonts/my.ttf" : "assets/fonts/ots.ttf",16,0x35599C,CENTER);
@@ -273,7 +271,7 @@ var cur = l.wallpaper;
         textDisplay.font = l.curLanguage == "en" ? "assets/fonts/my.ttf" : "assets/fonts/ots.ttf";
         textDisplay.text = l.curLanguage == "en" ? "Display" : "Дисплей";
         textDisplay.visible = false;
-        add(textDisplay);
+        add(textDisplay); 
 
         
         textDisplayFPS = new FlxText(0,0,0,"",28);
@@ -460,7 +458,7 @@ var cur = l.wallpaper;
         }, function name() 
         {
             App.listApplications.remove("settings");
-            this.updateItems();
+            TaskBar.isClear = true;
             RemoveUI();
         },true);
         window.screenCenter(XY);

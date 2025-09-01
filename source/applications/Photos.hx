@@ -62,7 +62,7 @@ class Photos extends App
         },function name() 
         {
             App.listApplications.remove("photos");
-            this.updateItems();
+            TaskBar.isClear = true;
             this.kill();
             
         },function name() 
