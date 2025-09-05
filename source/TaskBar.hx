@@ -108,7 +108,7 @@ class TaskBar extends FlxGroup
         add(menu);
         
         mainpart = new FlxSprite(0,0,"assets/images/taskbar.png");
-        mainpart.setGraphicSize(FlxG.width,FlxG.height);
+        mainpart.setGraphicSize(FlxG.width,40);
         mainpart.updateHitbox();
         mainpart.y += o.taskbar == "down" ? FlxG.height - 40 : o.taskbar == "up" ? 0 : 0; 
         add(mainpart);
