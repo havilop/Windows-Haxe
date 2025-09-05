@@ -25,6 +25,7 @@ class Notepad extends App
     static public var curpath:String = 'assets';
     static public var isUpdate:Bool = false;
     static public var textinfo:String = '';
+    static public var isApp:Bool = false;
 
     function Appear() 
     {
@@ -106,13 +107,14 @@ class Notepad extends App
     {
         super();
         super.taskbar("notepad");
-
+        Notepad.isApp = true;
         window = new ModernWindow(1200,"Notepad","assets/images/icons/notepad.png",
         function OnAppear()
         {
             Appear();
         },function name() 
         {
+            Notepad.isApp = true;
             FlxG.stage.removeChild(textField);
             App.listApplications.remove("notepad");
             TaskBar.isClear = true;
@@ -173,12 +175,19 @@ class Notepad extends App
         {
             save();
         }
+        if (ConsoleApp.isRestart == false && Notepad.isApp)
+        {
+            FlxG.stage.addChild(textField);
+        }
         if (ConsoleApp.isRestart)
         {
-             FlxG.stage.removeChild(textField);
+             
              Timer.delay(function name() {
+                FlxG.stage.removeChild(textField);
+                Notepad.isApp = false;
                  ConsoleApp.isRestart = false;
-             },100);
+             },1); 
+             
         }
     }
 }

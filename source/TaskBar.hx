@@ -108,7 +108,8 @@ class TaskBar extends FlxGroup
         add(menu);
         
         mainpart = new FlxSprite(0,0,"assets/images/taskbar.png");
-        mainpart.screenCenter(X);
+        mainpart.setGraphicSize(FlxG.width,FlxG.height);
+        mainpart.updateHitbox();
         mainpart.y += o.taskbar == "down" ? FlxG.height - 40 : o.taskbar == "up" ? 0 : 0; 
         add(mainpart);
 
@@ -134,7 +135,27 @@ class TaskBar extends FlxGroup
         menuextraSETTINGS.visible = false;
         add(menuextraSETTINGS);
 
-        restart = new FlxButton(0,0,"",function name(){ ConsoleApp.isRestart = true; Timer.delay(function name() {LoadState.setLoadingScreen(500,BIOState.new);},200);});
+        restart = new FlxButton(0,0,"",function name()
+            { ConsoleApp.isRestart = true;
+
+                 for (i in App.listApplications)
+                    {
+                        App.listApplications.remove(i);
+                            for (v in App.listApplications)
+                                {
+                                     App.listApplications.remove(v);
+                                      for (w in App.listApplications)
+                                {
+                                     App.listApplications.remove(w);
+                                }
+                            }
+                    }
+
+                    TaskBar.isUpdate = true;
+
+                     Timer.delay(function name() {
+                        LoadState.setLoadingScreen(200,BIOState.new);
+                    },2000);});
         restart.loadGraphic("assets/images/taskbar/restart.png");
         restart.updateHitbox();
         restart.text = o.curLanguage == "en" ? "Restart" : "Перезагрузка";

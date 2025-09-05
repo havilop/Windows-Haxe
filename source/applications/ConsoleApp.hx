@@ -133,13 +133,19 @@ class ConsoleApp extends App
                     ConsoleApp.isRestart = true;
                     for (i in App.listApplications)
                     {
-                        trace(i);
-                        App.listApplications.remove(i);
-                        trace(App.listApplications);
+                         App.listApplications.remove(i);
+                            for (v in App.listApplications)
+                                {
+                                     App.listApplications.remove(v);
+                                      for (w in App.listApplications)
+                                {
+                                     App.listApplications.remove(w);
+                                }
+                            }
                     }
                     trace(App.listApplications);
-
-                    Timer.delay(function () {LoadState.setLoadingScreen(2000,BIOState.new);},200);
+                    TaskBar.isUpdate = true;
+                    Timer.delay(function () {LoadState.setLoadingScreen(2000,BIOState.new);},2000);
                 case "shutdown":
                     stopFunction();
                     logToConsole("shutdown /off");

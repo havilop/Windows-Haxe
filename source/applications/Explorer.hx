@@ -193,7 +193,7 @@ class Explorer extends App
         if (isClose == true && closeAlso)
         {
             App.listApplications.remove("explorer");
-            this.updateItems();
+            TaskBar.isClear = true;
             this.kill();
             Explorer.isClose = false;
             Explorer.closeAlso = false;
@@ -201,7 +201,7 @@ class Explorer extends App
         if (isCloseNotepad == true && closeAlsoNotePad)
         {
             App.listApplications.remove("explorer");
-            this.updateItems();
+            TaskBar.isClear = true;
             this.kill();
             Explorer.isCloseNotepad = false;
             Explorer.closeAlsoNotePad = false;
@@ -427,11 +427,16 @@ function onClick():Void {
     {
         if (Explorer.isCloseNotepad == true)
         {
+            try {
             var info = File.getContent(selfPath);
             Notepad.textinfo = info;
             Notepad.curpath = selfPath;
             Notepad.isUpdate = true;
             Explorer.closeAlsoNotePad = true;
+            } catch (e:Dynamic)
+            {
+                trace(e);
+            }
         }
         if (Explorer.isCloseNotepad == false) {
         var info = File.getContent(selfPath);
