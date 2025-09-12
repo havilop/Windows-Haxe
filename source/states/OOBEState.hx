@@ -27,6 +27,7 @@ typedef Classic = {
     var userName:String;
     var password:String;
     var taskbar:String;
+    var cursor:String;
 } 
 
 class OOBEState extends FlxState
@@ -61,7 +62,7 @@ class OOBEState extends FlxState
           FlxG.sound.volumeDownKeys = null;
         FlxG.sound.volumeUpKeys = null;
         FlxG.mouse.visible = true;
-        FlxG.mouse.useSystemCursor = true;
+
 if (FileSystem.exists("assets/data/settings.json")) 
     {
         try 
@@ -182,6 +183,7 @@ if (FileSystem.exists("assets/Windows/mbr.json"))
                     l.password = storedPassword;
                     l.taskbar = "down";
                     o.OOBE = false;
+                    l.cursor = "assets/images/cursors/defaultCursor.png";
                     File.saveContent("assets/Windows/mbr.json", Json.stringify(l, null,""));
                     File.saveContent("assets/data/settings.json", Json.stringify(o, null,""));
                     FileSystem.createDirectory('assets/Windows/Users/$storedText');

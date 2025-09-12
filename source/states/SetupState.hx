@@ -1,330 +1,133 @@
 package states;
 
+import sys.FileSystem;
+import haxe.Json;
+import sys.io.File;
+import flixel.ui.FlxButton;
+import flixel.util.FlxColor;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
-import flixel.text.FlxText;
-import flixel.ui.FlxButton;
-import flixel.util.FlxColor;
-import haxe.Json;
-import haxe.Timer;
-import sys.FileSystem;
-import sys.io.File;
 import states.BIOState;
-import states.LoadState;
-import states.MBRstate;
-import states.OOBEState;
-import states.SetupState;
-import applications.ConsoleApp;
-import states.WindowsState;
 
-
-typedef Settings = {
-	public var isWindowsInstalled:Bool;
-	public var stepOne:Bool;
-	public var stepTwo:Bool;
-	var OOBE:Bool;
+typedef X = {
+    var OOBE:Bool;
 } 
-
-
 class SetupState extends FlxState
 {
-	public var cursor:FlxSprite;
-    public var isSystemCursor:Bool = true;
-	public var backgroundSetup:FlxSprite;
-
-	public var windowSetupWindow:CustomWindow;
-    public var confirmMenu:CustomWindow;
-    public var confirmMessageBox:FlxSprite;
-    public var confirmButtonOK:FlxButton;
-	public var confirmButtonOFF:FlxButton;
-	public var alsoClick:Bool = true;
-	public var start:Bool;
-	public var allow:Bool = false;
-
-	public var logoWindows:FlxSprite;
-	public var background:FlxSprite;
-	public var installButton:FlxButton;
-	public var diskText:FlxText;
-	public var disk:FlxSprite;
-	public var diskChoose:FlxSprite;
-	public var bar:FlxSprite;
-	public var nextButton:FlxButton;
-	public var barChoose:FlxButton;
-
-	public var o:Settings;
-	public var ready:Bool = false;
-	public var allowText:Bool = false;
-	public var text:FlxText;
-	
-	override public function create()
-	{
-		super.create();
-		FlxG.autoPause = false;
-		FlxG.mouse.useSystemCursor = isSystemCursor;
+    var bg:FlxSprite;
+    var window:ModernWindow;
+    var currentStage:Int = 1;
+    var bgSetup:FlxSprite;
+    var logo:FlxSprite;
+    var buttonInstall:FlxButton;
+    var buttonBack:FlxButton;
+    var o:X;
 
 
-	
-		
+    function AddUI() 
+    {
+        bgSetup = new FlxSprite(0,0,);
+        bgSetup.makeGraphic(1000,650,FlxColor.fromRGB(28,28,28));
+        bgSetup.updateHitbox();
+        add(bgSetup);
 
+        logo = new FlxSprite(0,0,"assets/images/uefi/logo.png");
+        logo.setGraphicSize(logo.width / 2,logo.height / 2);
+        logo.updateHitbox();
+        add(logo);
 
+        buttonInstall = new FlxButton(0,0,"Install",function name() {
+            install();
+            currentStage = 2;
+        });
+        buttonInstall.makeGraphic(100,25,FlxColor.fromRGB(55,55,55));
+        buttonInstall.label.setFormat(BackendAssets.my,16,FlxColor.WHITE,CENTER);
+        buttonInstall.updateHitbox();
+        add(buttonInstall);
 
-if (FileSystem.exists("assets/data/settings.json")) 
-{
-	try 
-	{
-		var data = File.getContent("assets/data/settings.json");
-		o = Json.parse(data);
+        buttonBack = new FlxButton(0,0,null,function name() {
+            if (currentStage == 2)
+            {
+                currentStage = 1;
+            }
+        });
+        buttonBack.loadGraphic("assets/images/back.png");
+        buttonBack.updateHitbox();
+        buttonBack.visible = false;
+        add(buttonBack);
+    }
+    override function create() {
+        super.create();
 
-		function step() {
-			o.stepOne = true;
-			File.saveContent("assets/data/settings.json", Json.stringify(o, null,""));
-			logoWindows.kill();
-			installButton.kill();
-			FlxG.switchState(SetupState.new);
-		}
-		function steptwo() {
-			o.stepTwo = true;
-			o.stepOne = false;
-			File.saveContent("assets/data/settings.json", Json.stringify(o, null,""));
-		background.kill();
-		bar.kill();
-		diskChoose.kill();
-		diskText.kill();
-		disk.kill();
-		nextButton.kill();
-		text.kill();
-		barChoose.kill();
-			FlxG.switchState(SetupState.new);
-		}
+        var data = File.getContent("assets/data/settings.json");
+        o = Json.parse(data);
 
+        FlxG.mouse.visible = true;
 
-        if (o.isWindowsInstalled == false) 
-		{
-			backgroundSetup = new FlxSprite(0,0,"assets/images/setup/bgsetup.png");
-			backgroundSetup.setGraphicSize(2000,2000);
-			backgroundSetup.screenCenter(X);
-			add(backgroundSetup);	
+        bg = new FlxSprite(0,0,"assets/images/setup/bgsetup.png");
+        bg.setGraphicSize(FlxG.width,FlxG.height);
+        bg.updateHitbox();
+        bg.screenCenter(XY);
+        add(bg);
 
-          windowSetupWindow = new CustomWindow(1000,600,"Windows Setup","assets/images/icons/WindowsInstaller.png",
-		  function name() 
-			{
-				logoWindows = new FlxSprite(0,0,"assets/images/setup/logo.png");
-				logoWindows.screenCenter(XY);
-				logoWindows.x += 200;
-				logoWindows.y += 50;
-				add(logoWindows);
-
-				installButton = new FlxButton(0,0,null,step);
-				installButton.screenCenter(XY);
-				installButton.loadGraphic("assets/images/setup/installnow.png");
-				installButton.x += -50;
-				installButton.y += 150;
-				add(installButton);
-
-				start = true;
-
-				if (o.stepOne == true)
-					{
-						logoWindows.kill();
-			            installButton.kill();
-
-						background = new FlxSprite(0,0,"assets/images/setup/bg.png");
-						background.screenCenter(XY);
-						add(background);
-
-						bar = new FlxSprite(0,FlxG.height - 120,"assets/images/setup/bar.png");
-						bar.setGraphicSize(FlxG.width,bar.height);
-						bar.updateHitbox();
-						add(bar);
-
-						diskText = new FlxText(0,0,0,"Where do you want to install Windows?",26);
-						diskText.color = 0x35599C;
-						diskText.font = "assets/fonts/my.ttf";
-						diskText.screenCenter(XY);
-						diskText.y -= 235;
-						diskText.x -= 185;
-						add(diskText);
-
-						diskChoose = new FlxSprite(0,0,"assets/images/setup/diskChoose.png");
-						diskChoose.screenCenter(XY);
-						add(diskChoose);
-
-						disk = new FlxSprite(0,0,"assets/images/disk.png");
-						disk.screenCenter(XY);
-						disk.setGraphicSize(60,30);
-						disk.updateHitbox();
-						disk.x -= 300;
-						disk.y -= 120; 
-						add(disk);
-
-						text = new FlxText(0,0,0,"Please choose disk",16);
-						text.color = 0x9C353E;
-						text.font = "assets/fonts/my.ttf";
-						text.screenCenter(XY);
-						text.y += 200;
-						text.x += 0;
-						text.visible = false;
-						add(text);
-
-
-						nextButton = new FlxButton(0,0,"Next", function name() {
-							if (ready == false && allowText == false) {
-					text.visible = true;
-							allowText = true;
-							}
-						
-						
-							if (ready == true)
-							{
-								steptwo();
-							}
-						});
-						nextButton.screenCenter(XY);
-						nextButton.setGraphicSize(60,30);
-						nextButton.label.setFormat("assets/fonts/my.ttf", 18, FlxColor.BLACK, LEFT);
-						nextButton.updateHitbox();
-						nextButton.x += 450;
-						nextButton.y += 250;
-						add(nextButton);
-
-						barChoose = new FlxButton(0,0,null,function name() {
-							barChoose.loadGraphic("assets/images/setup/choose.png");
-							barChoose.updateHitbox();
-							ready = true;
-						});
-						barChoose.loadGraphic("assets/images/setup/none.png");
-						barChoose.screenCenter(XY);
-						barChoose.setGraphicSize(780,40);
-						barChoose.updateHitbox();
-						barChoose.x += 10;
-						barChoose.y -= 140;
-						add(barChoose);
-					}
-				 if (o.stepTwo == true)
-				 {
-					logoWindows.kill();
-					installButton.kill();
-			      
-
-				   var barStep = new FlxSprite(0,FlxG.height - 120,"assets/images/setup/barStepTwo.png");
-				   	barStep.setGraphicSize(FlxG.width,barStep.height);
-					barStep.updateHitbox();
-				   add(barStep);
-
-				   Timer.delay(function name(){
-					o.isWindowsInstalled = true;
+        window = new ModernWindow(1000,"Windows Installer","assets/images/icons/WindowsInstaller.png",function name() {
+            AddUI();
+        },
+        function exit() 
+        {
+            LoadState.setLoadingScreen(1000,BIOState.new);
+        },
+        function minus() {
+            
+        },true);
+        window.screenCenter(X);
+        window.y -= 250;
+        add(window);
+    }
+    function install() {
 					o.OOBE = true;
-					o.stepOne = false;
-					o.stepTwo = false;
 					File.saveContent("assets/data/settings.json", Json.stringify(o, null,""));
 					FlxG.switchState(BIOState.new);
-					var folderPath = "assets/Windows"; // Путь к папке (можно изменить)
-					var filePath = folderPath + "/mbr.json"; // Полный путь к файлу
+					var folderPath = "assets/Windows";
+					var filePath = folderPath + "/mbr.json"; 
 			
-					// Проверяем, существует ли папка, если нет — создаём
+					
 					if (!FileSystem.exists(folderPath)) {
 						FileSystem.createDirectory(folderPath);
 					} else {
 					}	
 			
-					// Создаём или перезаписываем файл mbr.json
 					var content = "{ \"bootloader\": \"MBR\", \"curLanguage\": \"en\", \"wallpaper\": \"assets/images/wallpapers/wallpaper.png\", \"FPS\": 60, \"icon\": \"assets/images/user/default.png\", \"autologin\": false }"; // Содержимое JSON
 					File.saveContent(filePath, content);
 					trace('file: $filePath');
 					FileSystem.createDirectory("assets/Windows/applications");
-					
-				   }, 5000);
-				 }
-		    }, 
-			function name() 
-			{
+    }
+    override function update(elapsed:Float) {
+        super.update(elapsed);
 
-            if (alsoClick == true) {
-              confirmMenu = new CustomWindow(600,300,"Attention","assets/images/icons/WindowsInstaller.png",function name() {
-				trace("AppearConfirmMenu");
+        switch (currentStage)
+        {
+            case 1:
+                logo.visible = true;
+                buttonInstall.visible = true;
+                buttonBack.visible = false;
+            case 2:
+                logo.visible = false;
+                buttonInstall.visible = false;
+                buttonBack.visible = true;
+        }
 
-				confirmMessageBox = new FlxSprite(350,150,"assets/images/setup/confirm.png");
-				confirmMessageBox.screenCenter(XY);
-				confirmMessageBox.x += 50;
-				add(confirmMessageBox);
+        bgSetup.x = window.x;
+        bgSetup.y = window.y;
 
-				confirmButtonOK = new FlxButton(0,0,"OK",function name() {   o.stepOne = false;
-					o.stepTwo = false;
-					File.saveContent("assets/data/settings.json", Json.stringify(o, null,""));  Sys.exit(0);});
-				confirmButtonOK.screenCenter(XY);
-				confirmButtonOK.y += 100;
-				confirmButtonOK.x -= 57;
-				confirmButtonOK.label.setFormat("assets/fonts/my.ttf", 16, FlxColor.BLACK);
-				confirmButtonOK.makeGraphic(60, 20, FlxColor.GRAY);
-				add(confirmButtonOK);
+        logo.x = window.x + 50;
+        logo.y = window.y + 50;
 
-				confirmButtonOFF = new FlxButton(0,0,"CANCEL",function name() { alsoClick = true;
-					confirmMessageBox.kill();
-					confirmMenu.kill();
-					confirmButtonOFF.kill();
-					confirmButtonOK.kill();
-				 });
-				confirmButtonOFF.screenCenter(XY);
-				confirmButtonOFF.y += 100;
-				confirmButtonOFF.x += 50;
-				confirmButtonOFF.label.setFormat("assets/fonts/my.ttf", 16, FlxColor.BLACK);
-				confirmButtonOFF.makeGraphic(80, 20, FlxColor.GRAY);
-				add(confirmButtonOFF);
+        buttonInstall.x = window.x + 850;
+        buttonInstall.y = window.y + 580;
 
-
-            alsoClick = false;
-			  
-
-
-			}, function name(){
-
-				alsoClick = true;
-			   confirmMessageBox.kill();
-               confirmMenu.kill();
-			   confirmButtonOK.kill();
-			   confirmButtonOFF.kill();
-			}, false);
-           confirmMenu.x += 250;
-		   confirmMenu.y += 150;
-           add(confirmMenu);
-		     }
-		    }, false);
-		  add(windowSetupWindow);
-		
-
-		}
-		if (o.isWindowsInstalled == true)
-			{
-				FlxG.switchState(BIOState.new);	
-			}
-	}
-}
-	}
-
-	override public function update(elapsed:Float)
-	{
-		super.update(elapsed);
-if (FlxG.keys.justPressed.F10)
-            {
-            var test = new ConsoleApp();
-            add(test);
-            }
-		if (o.stepOne == true)
-		{
-			background.x = windowSetupWindow.x;
-			background.y = windowSetupWindow.y;
-if(FlxG.mouse.overlaps(barChoose) && allow == false){
-
-
-			barChoose.loadGraphic("assets/images/setup/noneCover.png");
-			barChoose.updateHitbox();
-			allow = true;
-}     
-		}
-	}
-	override function destroy() {
-		super.destroy(); // Важно вызывать родительский destroy!
-		
-	}
+        buttonBack.x = window.x + 15;
+        buttonBack.y = window.y + 30;
+    }
 }

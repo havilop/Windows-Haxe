@@ -1,5 +1,5 @@
 {
-	"isWindowsInstalled": false,
+	"isWindowsInstalled": true,
 	"stepOne": false,
 	"stepTwo": false,
 	"autoMBR": false,

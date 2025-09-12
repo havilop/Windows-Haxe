@@ -33,6 +33,7 @@ class Photos extends App
         addButton = new FlxButton(0,0,null,function name() {
             WindowsState.openApp("explorer");
             Explorer.isClose = true;
+            Explorer.isPhotos = true;
         });
         addButton.makeGraphic(25,25);
         addButton.loadGraphic("assets/images/apps/add.png");

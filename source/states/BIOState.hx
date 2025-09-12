@@ -120,7 +120,7 @@ trace(screenX);
         fastboot.label.setFormat(BackendAssets.my,35,FlxColor.WHITE,CENTER);
         itemsBios.add(fastboot);
 
-        installWindows = new FlxButton(85,235,'Install Windows',function name() { o.isWindowsInstalled = false; File.saveContent("assets/data/settings.json", Json.stringify(o, null,"")); LoadState.setLoadingScreen(1000,SetupState.new);});
+        installWindows = new FlxButton(85,235,'Install Windows',function name() { LoadState.setLoadingScreen(1000,SetupState.new);});
         installWindows.makeGraphic(200,50,FlxColor.TRANSPARENT);
         installWindows.label.setFormat(BackendAssets.my,35,FlxColor.WHITE,CENTER);
         itemsBios.add(installWindows);
@@ -262,8 +262,6 @@ trace(screenX);
                 }
                 if (o.boot == "usb")
                 {
-                    o.isWindowsInstalled = false;
-                    File.saveContent("assets/data/settings.json", Json.stringify(o, null,""));
                     LoadState.setLoadingScreen(1000,SetupState.new);
                 }
             }
@@ -283,8 +281,6 @@ trace(screenX);
                 }
                 if (o.boot == "usb")
                 {
-                    o.isWindowsInstalled = false;
-                    File.saveContent("assets/data/settings.json", Json.stringify(o, null,""));
                     LoadState.setLoadingScreen(1000,SetupState.new);
                 }
             }

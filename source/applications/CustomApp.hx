@@ -14,12 +14,15 @@ class CustomApp extends App
     public function new(X:Int,title:String,icon:String)
     {
         super();
+        super.taskbar(title);
         window = new ModernWindow(X,title,icon,function name() {
 
             itemsCustomApp = new FlxTypedGroup<FlxSpriteGroup>();
             add(itemsCustomApp);
 
         },function name() {
+            App.listApplications.remove('$title');
+            TaskBar.isClear = true;
             this.kill();
         },function name() {
             
@@ -28,11 +31,5 @@ class CustomApp extends App
     }
     override function update(elapsed:Float) {
         super.update(elapsed);
-
-        for (i in itemsCustomApp)
-        {
-            i.x = window.x + 50;
-            i.y = window.y = 150;
-        }
     }
 }

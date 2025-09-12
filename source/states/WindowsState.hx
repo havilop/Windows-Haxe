@@ -31,6 +31,7 @@ typedef WindowsMain = {
     var FPS:Int;
     var taskbar:String;
     var curLanguage:String;
+    var cursor:String;
 } 
 class WindowsState extends FlxState
 {
@@ -38,7 +39,7 @@ class WindowsState extends FlxState
     var ISAPPEAR:Bool;
        var is = false;
    static public var bg:FlxSprite;
-    var o:WindowsMain;
+   static public var o:WindowsMain;
     var menu:FlxSprite;
     var settings:SettingsApplication;
     var taskbarmenu:FlxButton;
@@ -69,7 +70,7 @@ class WindowsState extends FlxState
         FlxG.sound.volumeDownKeys = null;
         FlxG.sound.volumeUpKeys = null;
         FlxG.mouse.visible = true;
-        FlxG.mouse.useSystemCursor = true;
+        
         FlxG.autoPause = false;
         App.isWindowsState = true;
         if (FileSystem.exists("assets/Windows/mbr.json"))
@@ -80,6 +81,8 @@ class WindowsState extends FlxState
                 o = Json.parse(data);
             }
         }
+
+        FlxG.mouse.cursor.bitmapData = BitmapData.fromFile(o.cursor);
         var bitmapData:BitmapData = BitmapData.fromFile(o.wallpaper);
         bg = new FlxSprite(0,0);
         bg.loadGraphic(bitmapData);
@@ -112,6 +115,11 @@ class WindowsState extends FlxState
         add(errorText);
 
     }
+    public static function updateCursor() 
+    {
+        FlxG.mouse.cursor.bitmapData = BitmapData.fromFile(o.cursor);
+        FlxG.mouse.visible = false;
+    }
     public static function changeWallpaper(NewImage:Dynamic) {
         newImage = NewImage;
         isChange = true;
@@ -136,7 +144,7 @@ class WindowsState extends FlxState
         if (IsSystem == true)
         {
             settings = new SettingsApplication();
-            settings.currentSection = "system";
+            settings.toNextSection("system");
             add(settings);
             IsSystem = false;
         }
@@ -165,7 +173,7 @@ class WindowsState extends FlxState
                     {
              taskbarmenu = new FlxButton(0,0,"",function name() {
             settings = new SettingsApplication();
-            settings.currentSection = "personalization";
+            settings.toNextSection("personalization");
             add(settings);
         });
         taskbarmenu.loadGraphic("assets/images/taskbarmeu.png");
@@ -201,7 +209,7 @@ is = true;
             currentApp = '';
             case "settings":
             var settings = new SettingsApplication();
-            settings.currentSection = "system";
+            settings.toNextSection("system");
             add(settings);
             currentApp = '';
             case "calc":

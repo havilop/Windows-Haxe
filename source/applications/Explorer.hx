@@ -1,5 +1,6 @@
 package applications;
 
+import applications.SettingsApplication.AppCursor;
 import states.WindowsState;
 import haxe.Json;
 import haxe.Timer;
@@ -36,6 +37,8 @@ class Explorer extends App
     public static var currentPath:String;
     public static var closeAlso:Bool = false;
     public static var closeAlsoNotePad:Bool = false;
+    public static var isPhotos:Bool = false;
+    public static var isCursor:Bool = false;
 
     function Appear() 
     {
@@ -450,8 +453,18 @@ function onClick():Void {
     {
         if (Explorer.isClose == true)
         {
+            if (Explorer.isPhotos == true)
+            {
             Photos.pathFile = selfPath;
             Photos.updateFile();
+            Explorer.isPhotos = false;
+            }
+            if (Explorer.isCursor == true)
+            {
+                AppCursor.currentPath = selfPath;
+                AppCursor.updateImage();
+                Explorer.isCursor = false;
+            }
             Explorer.closeAlso = true;
         }
         if (Explorer.isClose == false) {
