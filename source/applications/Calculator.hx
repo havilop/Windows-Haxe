@@ -200,7 +200,12 @@ class Calculator extends App
             TaskBar.isClear = true;
             this.kill();
           }, function minus() {
-            
+            this.visible = false;
+             for (i in this)
+            {
+                i.active = false;
+            }
+            window.isDragging = false;
           },true);
           window.screenCenter(XY);
           window.y -= 50;

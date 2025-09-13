@@ -261,6 +261,12 @@ var cur = l.wallpaper;
             add(sex);
         });
         buttonChangeCursor.loadGraphic("assets/images/settings/cursor.png");
+        buttonChangeCursor.onOver.callback = function name() {
+            buttonChangeCursor.color = 0x80b8b8b8;
+        }
+        buttonChangeCursor.onOut.callback = function name() {
+            buttonChangeCursor.color = FlxColor.fromRGB(255,255,255,255);
+        }
         buttonChangeCursor.updateHitbox();
         buttonChangeCursor.label.setFormat(l.curLanguage == "en" ? BackendAssets.my : BackendAssets.ru,16,FlxColor.WHITE,CENTER);
         buttonChangeCursor.text = l.curLanguage == "en" ? "Change Cursor" : "Курсор мыши";
@@ -585,7 +591,12 @@ var cur = l.wallpaper;
             TaskBar.isClear = true;
             RemoveUI();
         },function name() {
-            
+            this.visible = false;
+             for (i in this)
+            {
+                i.active = false;
+            }
+            window.isDragging = false;
         },true);
         window.screenCenter(XY);
         add(window);

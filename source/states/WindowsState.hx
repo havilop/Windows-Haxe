@@ -1,4 +1,5 @@
 package states;
+import applications.TestGame;
 import openfl.display.Bitmap;
 import applications.Photos;
 import openfl.display.BitmapData;
@@ -227,6 +228,10 @@ is = true;
             case "photos":
             var photos = new Photos();
             add(photos);
+            currentApp = '';
+            case "testgame":
+            var testgame = new TestGame();
+            add(testgame);
             currentApp = '';
         }
     }

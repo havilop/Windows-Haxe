@@ -1,3 +1,6 @@
+import flixel.FlxG;
+import flixel.group.FlxSpriteGroup;
+
 class BackendAssets
 {
     static public var my = 'assets/fonts/my.ttf';

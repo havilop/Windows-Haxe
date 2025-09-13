@@ -121,7 +121,12 @@ class Notepad extends App
             this.kill();
         },function name() 
         {
-            
+            this.visible = false;
+             for (i in this)
+            {
+                i.active = false;
+            }
+            window.isDragging = false;
         }, true);
         add(window);
     }

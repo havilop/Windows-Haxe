@@ -92,6 +92,12 @@ class ConsoleApp extends App
         },exit,
         function minus() 
         {
+            this.visible = false;
+             for (i in this)
+            {
+                i.active = false;
+            }
+            window.isDragging = false;
         }, true);
         add(window);
         upstored = -30;

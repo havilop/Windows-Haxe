@@ -15,7 +15,7 @@ class CustomApp extends App
     {
         super();
         super.taskbar(title);
-        window = new ModernWindow(X,title,icon,function name() {
+        window = new ModernWindow(X,title,"assets/images/icons/null.png",function name() {
 
             itemsCustomApp = new FlxTypedGroup<FlxSpriteGroup>();
             add(itemsCustomApp);

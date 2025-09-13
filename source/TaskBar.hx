@@ -1,4 +1,8 @@
 
+import openfl.display.BitmapData;
+import flixel.graphics.FlxGraphic;
+import flixel.system.FlxAssets.FlxGraphicAsset;
+import applications.TestGame;
 import haxe.Log;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -116,11 +120,23 @@ class TaskBar extends FlxGroup
         startmenu = new FlxButton(0,0,"",appear);
         startmenu.loadGraphic("assets/images/startmenu.png");
         startmenu.updateHitbox();
+        startmenu.onOut.callback = function name() {
+            startmenu.loadGraphic("assets/images/startmenu.png");
+        }
+        startmenu.onOver.callback = function name() {
+            startmenu.loadGraphic("assets/images/startmenuCOVER.png");
+        }
         startmenu.y += o.taskbar == "down" ? FlxG.height - 40 : o.taskbar == "up" ? 0 : 0; 
         add(startmenu);
 
         menuextraOFF = new FlxButton(0,0,"",appearOFF);
         menuextraOFF.loadGraphic("assets/images/menuEXTRAOFF.png");
+        menuextraOFF.onOut.callback = function name() {
+            menuextraOFF.loadGraphic("assets/images/menuEXTRAOFF.png");
+        }
+        menuextraOFF.onOver.callback = function name() {
+            menuextraOFF.loadGraphic("assets/images/menuEXTRAOFFCOVER.png");
+        }
         menuextraOFF.y = o.taskbar == "down" ? FlxG.height - 87 : o.taskbar == "up" ? 719 : 719;
         menuextraOFF.visible = false;
         add(menuextraOFF);
@@ -131,6 +147,12 @@ class TaskBar extends FlxGroup
             appear();
         });
         menuextraSETTINGS.loadGraphic("assets/images/menuEXTRASETTINGS.png");
+        menuextraSETTINGS.onOver.callback = function name() {
+            menuextraSETTINGS.loadGraphic("assets/images/menuEXTRASETTINGSCOVER.png");
+        }
+        menuextraSETTINGS.onOut.callback = function name() {
+            menuextraSETTINGS.loadGraphic("assets/images/menuEXTRASETTINGS.png");
+        }
         menuextraSETTINGS.y = o.taskbar == "down" ? FlxG.height - 133 : o.taskbar == "up" ? 670 : 670;
         menuextraSETTINGS.visible = false;
         add(menuextraSETTINGS);
@@ -184,13 +206,44 @@ class TaskBar extends FlxGroup
 
         for (num => i in App.Apps)
         {
-            trace(i);
-            var item = new FlxButton(90, (num * 40) + (o.taskbar == "up" ? 40 : o.taskbar == "down" ? 315 :315) , i,function name() { WindowsState.openApp(i);  swithcFirstTimed = true;appear();});
+            
+            function returnSprite() 
+            {
+                var cur:String = '';
+                var current = 'assets/images/icons/$cur.png';
+                var apps = App.Apps;
+                var listOfFiles = FileSystem.readDirectory("assets/images/icons");
+                var string = listOfFiles.toString();
+                var resul = StringTools.replace(string, "[", "");
+                resul = StringTools.replace(resul, "]", "");
+                resul = StringTools.replace(resul, ",", "");
+                var c = resul;
+                var newW = c.split(".png");
+                newW.pop();
+                var result = "sex";
+
+                if (i != result)
+                {
+                    current = 'assets/images/icons/null.png';
+                }
+
+                if (newW.indexOf(i) != -1) 
+                {
+                    result = i;
+                   if (i == result)
+                {
+                    current = 'assets/images/icons/$result.png';
+                }
+                }
+                return current;
+            }
+            var image = returnSprite();
+            var item = new FlxButton(90, (num * 40) + (o.taskbar == "up" ? 40 : o.taskbar == "down" ? 315 :315) , i,function nam() { WindowsState.openApp(i);  swithcFirstTimed = true;appear();});
             item.makeGraphic(220,40,FlxColor.TRANSPARENT);
             item.label.setFormat(BackendAssets.my,16,FlxColor.WHITE,LEFT);
             item.text = item.text == "console" ? "console" : item.text == "calc" ? "calculator" : i;
             item.updateHitbox();
-            var img = new FlxSprite(50,(num * 40) + (o.taskbar == "up" ? 40 : o.taskbar == "down" ? 315 :315),'assets/images/icons/$i.png');
+            var img = new FlxSprite(50,(num * 40) + (o.taskbar == "up" ? 40 : o.taskbar == "down" ? 315 :315),image);
             img.setGraphicSize(40,40);
             img.updateHitbox();
             appsMenu.add(item);
@@ -207,6 +260,12 @@ class TaskBar extends FlxGroup
 
         volume = new FlxButton(0,0,"",null);
         volume.loadGraphic("assets/images/volume.png");
+        volume.onOver.callback = function name() {
+            volume.loadGraphic("assets/images/volumeCOVER.png");
+        }
+        volume.onOut.callback = function name() {
+            volume.loadGraphic("assets/images/volume.png");
+        }
         volume.updateHitbox();
         volume.x = FlxG.width - 90;
         volume.y += o.taskbar == "down" ? FlxG.height - 40 : o.taskbar == "up" ? 0 : 0; 
@@ -220,57 +279,6 @@ class TaskBar extends FlxGroup
     }   
     override function update(elapsed:Float) {
         super.update(elapsed);
-
-          
-    var isOverlapping = startmenu.overlapsPoint(FlxG.mouse.getWorldPosition());
-    
-    if (wasOverlapping && isOverlapping) {
-        startmenu.loadGraphic("assets/images/startmenuCOVER.png");
-    }
-
-    if (wasOverlapping && !isOverlapping) {
-        trace("out");
-        startmenu.loadGraphic("assets/images/startmenu.png");
-    }
-    
-    wasOverlapping = isOverlapping;
-//////////////////////////////////////////////////////////////
-     var isOveroOff = menuextraOFF.overlapsPoint(FlxG.mouse.getWorldPosition());
-    
-    if (wasoff && isOveroOff) {
-        menuextraOFF.loadGraphic("assets/images/menuEXTRAOFFCOVER.png");
-    }
-
-    if (wasoff && !isOveroOff) {
-menuextraOFF.loadGraphic("assets/images/menuEXTRAOFF.png");
-    }
-    
-    wasoff = isOveroOff;
-
-    
-    var isOverlappin = menuextraSETTINGS.overlapsPoint(FlxG.mouse.getWorldPosition());
-    
-    if (wasOverlappin && isOverlappin) {
-        trace("doit");
-        menuextraSETTINGS.loadGraphic("assets/images/menuEXTRASETTINGSCOVER.png");
-    }
-
-    if (wasOverlappin && !isOverlappin) {
-        menuextraSETTINGS.loadGraphic("assets/images/menuEXTRASETTINGS.png");
-    }
-    
-    wasOverlappin = isOverlappin;
-
-    
-        var isOver = volume.overlapsPoint(FlxG.mouse.getWorldPosition());
-    if (was && isOver) {
-        volume.loadGraphic("assets/images/volumeCOVER.png");
-    }
-
-    if (was && !isOver) {
-    volume.loadGraphic("assets/images/volume.png");
-    }
-    was = isOver;
     
     if (isClear)
     {
@@ -286,14 +294,47 @@ menuextraOFF.loadGraphic("assets/images/menuEXTRAOFF.png");
     }
  updateTime();
     }
-
      function createNewItem(x:Float,y:Float,name:String)
         {
-        var item:FlxButton = new FlxButton(x,y,null,null);
-        item.loadGraphic('assets/images/icons/$name.png');
+            function returnSprite() 
+            {
+                var cur:String = '';
+                var current = 'assets/images/icons/$cur.png';
+                var apps = App.Apps;
+                var listOfFiles = FileSystem.readDirectory("assets/images/icons");
+                var string = listOfFiles.toString();
+                var resul = StringTools.replace(string, "[", "");
+                resul = StringTools.replace(resul, "]", "");
+                resul = StringTools.replace(resul, ",", "");
+                var c = resul;
+                var newW = c.split(".png");
+                newW.pop();
+                var result = "sex";
+
+                if (name != result)
+                {
+                    current = 'assets/images/icons/null.png';
+                }
+
+                if (newW.indexOf(name) != -1) 
+                {
+                    result = name;
+                   if (name == result)
+                {
+                    current = 'assets/images/icons/$result.png';
+                }
+                }
+                return current;
+            }
+        var image = returnSprite();
+        var item:FlxButton = new FlxButton(x,y,null,function nam() {
+            App.visibleE = true;
+        });
+        item.loadGraphic(image);
         item.setGraphicSize(40,40);
         item.updateHitbox();
         return item;
+
         }
 
          function updateItems() {

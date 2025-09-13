@@ -10,9 +10,9 @@ class ModernWindow extends FlxSprite
     public var titleText:FlxText;
     private var iconWindow:FlxSprite;
     public var exitWindow:FlxButton;
-    var minusWindow:FlxButton;
+    public var minusWindow:FlxButton;
   
-    private var isDragging:Bool = false;
+    public var isDragging:Bool = false;
     private var dragOffsetX:Float = 0;
     private var dragOffsetY:Float = 0;
  
@@ -67,8 +67,8 @@ class ModernWindow extends FlxSprite
         {
             super.draw(); // Рисуем окно
             iconWindow.draw();
-            exitWindow.draw();
             minusWindow.draw();
+            exitWindow.draw();
             titleText.draw(); // Рисуем текст поверх окна
         }
         override public function update(elapsed:Float):Void
@@ -98,6 +98,7 @@ class ModernWindow extends FlxSprite
 
 
                 exitWindow.update(elapsed);
+                minusWindow.update(elapsed);
                 
                 // Обновляем позицию кнопки при изменении позиции окна
                 exitWindow.x = this.x + this.width - 48;
