@@ -74,6 +74,7 @@ class WindowsState extends FlxState
         
         FlxG.autoPause = false;
         App.isWindowsState = true;
+        FlxG.worldBounds.set(0,0,4000,4000);
         if (FileSystem.exists("assets/Windows/mbr.json"))
         {
             try 
@@ -100,7 +101,7 @@ class WindowsState extends FlxState
         menu.visible = false;
         add(menu);
 
-        var testDesktop = new TestDesktop();
+        var testDesktop = new Desktop();
         add(testDesktop);
         
         taskBar = new TaskBar();

@@ -32,6 +32,8 @@ class ModernWindow extends FlxSprite
         super.setGraphicSize(X,30);
         super.updateHitbox();
         
+
+        
         // Создаем текстовое поле для заголовка
         titleText = new FlxText(this.x + 35, this.y + 15, this.width - 40, title);
         titleText.setFormat(null, 16, FlxColor.WHITE, LEFT);

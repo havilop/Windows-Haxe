@@ -125,6 +125,7 @@ class Notepad extends App
              for (i in this)
             {
                 i.active = false;
+                textField.visible = false;
             }
             window.isDragging = false;
         }, true);
@@ -193,6 +194,10 @@ class Notepad extends App
                  ConsoleApp.isRestart = false;
              },1); 
              
+        }
+        if(visibleEE)
+        {
+            textField.visible = true;
         }
     }
 }

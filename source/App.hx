@@ -1,3 +1,4 @@
+
 import flixel.FlxSprite;
 import flixel.ui.FlxButton;
 import flixel.text.FlxText;
@@ -9,6 +10,7 @@ class App extends FlxGroup
     public static var listApplications:Array<String> = [];
     public static var Apps:Array<String> = ["console","settings","calc","explorer","notepad","photos","testgame"];
     public var nameApp:String = '';
+    public var isActive:Bool = false;
     public static var isWindowsState:Bool = false;
     var items:FlxTypedGroup<FlxButton>;
     public static var visibleE:Bool = false;
@@ -41,6 +43,13 @@ class App extends FlxGroup
                 i.active = true;
             }
             visibleEE = false;
+        }
+        if (isActive)
+        {
+            for (i in this)
+            {
+                i.active = true;
+            }
         }
     }
 }

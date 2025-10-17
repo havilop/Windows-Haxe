@@ -332,6 +332,12 @@ class TaskBar extends FlxGroup
         });
         item.loadGraphic(image);
         item.setGraphicSize(40,40);
+        item.onOver.callback = function name() {
+            item.color = 0xdac9d5fd;
+        }
+        item.onOut.callback = function name() {
+            item.color = FlxColor.WHITE;
+        }
         item.updateHitbox();
         return item;
 
